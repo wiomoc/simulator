@@ -5,8 +5,6 @@
  */
 package simulator.server.model;
 
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
-import java.awt.Color;
 import java.util.List;
 import simulator.SimulatorMap;
 

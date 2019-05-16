@@ -12,9 +12,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 import simulator.SimulatorMap;
 import simulator.interfaces.IClientCallback;
@@ -29,14 +27,14 @@ import simulator.server.model.Player;
  */
 public class Server implements IServer, Serializable {
 
-    HashMap<String, Game> games = new HashMap<>();
+    private HashMap<String, Game> games = new HashMap<>();
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
         Registry localRegistry = LocateRegistry.createRegistry(8888);
 
         Server server = new Server();
         
-        UnicastRemoteObject.exportObject(server);
+        UnicastRemoteObject.exportObject(server, 0);
         
         localRegistry.bind("simulator", server);
     }

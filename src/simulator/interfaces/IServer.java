@@ -5,19 +5,20 @@
  */
 package simulator.interfaces;
 
+import java.io.Serializable;
 import java.rmi.Remote;
-import java.util.List;
+import java.rmi.RemoteException;
 import java.util.Set;
+
 import simulator.SimulatorMap;
 
 /**
- *
  * @author 82wach1bif
  */
-public interface IServer extends Remote {
-    IRemoteGame createAndJoinGame(String name, String code, SimulatorMap map, String playerName, IClientCallback callback);
-    
-    IRemoteGame joinGame(String name, String code, String playerName, IClientCallback callback);
-    
-    Set<String> listGames();
+public interface IServer extends Remote, Serializable {
+    IRemoteGame createAndJoinGame(String name, String code, SimulatorMap map, String playerName, IClientCallback callback) throws RemoteException;
+
+    IRemoteGame joinGame(String name, String code, String playerName, IClientCallback callback) throws RemoteException;
+
+    Set<String> listGames() throws RemoteException;
 }

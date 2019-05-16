@@ -7,15 +7,18 @@ package simulator.interfaces;
 
 import simulator.SimulatorMap;
 
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
- *
  * @author 82wach1bif
  */
-public interface IClientCallback {
+public interface IClientCallback extends Serializable, Remote {
 
-    void onMessage(String msg);
+    void onMessage(String msg) throws RemoteException;
 
-    void onMapLoaded(SimulatorMap map);
+    void onMapLoaded(SimulatorMap map)throws RemoteException;
 
-    void onGameFinished();
+    void onGameFinished() throws RemoteException;
 }

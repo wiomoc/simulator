@@ -12,17 +12,18 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import simulator.SimulatorMap;
 import simulator.interfaces.IClientCallback;
 import simulator.interfaces.IRemoteGame;
 import simulator.interfaces.IServer;
 
 /**
- *
  * @author 82wach1bif
  */
 public class MultiplayerLogic {
@@ -118,7 +119,11 @@ public class MultiplayerLogic {
     }
 
     public void sendMessage(String msg) {
-        game.message(msg);
+        try {
+            game.message(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void createGame(String name) {
@@ -126,7 +131,11 @@ public class MultiplayerLogic {
             throw new IllegalStateException();
         }
 
-        server.joinGame(name, "123", "testPlayer", new ClientCallback());
+        try {
+            server.joinGame(name, "123", "testPlayer", new ClientCallback());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void joinGame(String name) {
@@ -140,7 +149,12 @@ public class MultiplayerLogic {
             throw new IllegalStateException();
         }
 
-        return server.listGames();
+        try {
+            return server.listGames();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return Collections.emptySet();
+        }
     }
 
     public void setPlayerTurn(int position) {

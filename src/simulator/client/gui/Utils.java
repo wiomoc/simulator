@@ -8,8 +8,6 @@ package simulator.client.gui;
 import java.awt.Component;
 import java.io.File;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 

@@ -6,16 +6,16 @@
 package simulator.server.model;
 
 import java.awt.Color;
+import java.rmi.RemoteException;
 import java.util.List;
+
 import simulator.interfaces.IClientCallback;
-import simulator.interfaces.IRemoteGame;
 
 /**
- *
  * @author 82wach1bif
  */
 public class Player {
-    
+
     private IClientCallback clientCallback;
     private int id;
     private String name;
@@ -27,14 +27,18 @@ public class Player {
         this.clientCallback = clientCallback;
         this.name = name;
     }
-    
+
     public void sendMessage(String message) {
-        clientCallback.onMessage(message);
+        try {
+            clientCallback.onMessage(message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     String getName() {
-       return name;
+        return name;
     }
-    
-    
+
+
 }

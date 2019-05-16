@@ -5,14 +5,15 @@
  */
 package simulator.interfaces;
 
-import java.util.List;
-import simulator.SimulatorMap;
+import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author 82wach1bif
  */
-public interface IRemoteGame {
-    void message(String msg);
-    void playerTurn(String msg);
+public interface IRemoteGame extends Remote, Serializable {
+    void message(String msg) throws RemoteException;
+    void playerTurn(String msg) throws RemoteException;
 }

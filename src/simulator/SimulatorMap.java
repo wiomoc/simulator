@@ -9,16 +9,12 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javafx.scene.shape.Path;
 
 /**
  *
@@ -28,11 +24,11 @@ public class SimulatorMap implements Serializable {
 
     private GeneralPath outer;
     private GeneralPath inner;
-    private Line2D startLine;
+    private Line2D.Float startLine;
     private int width;
     private int heigth;
 
-    private SimulatorMap(int width, int heigth, GeneralPath outer, GeneralPath inner, Line2D startLine) {
+    private SimulatorMap(int width, int heigth, GeneralPath outer, GeneralPath inner, Line2D.Float startLine) {
         this.width = width;
         this.heigth = heigth;
         this.outer = outer;
@@ -127,7 +123,7 @@ public class SimulatorMap implements Serializable {
             line = readLine(reader);
             int rasterSize = line.get(0);
             line = readLine(reader);
-            Line2D startLine = new Line2D.Float(line.get(0), line.get(1),line.get(2), line.get(3));
+            Line2D.Float startLine = new Line2D.Float(line.get(0), line.get(1),line.get(2), line.get(3));
 
 
             return new SimulatorMap(width, height, createPath(outterPoints), createPath(innerPoints), startLine);
