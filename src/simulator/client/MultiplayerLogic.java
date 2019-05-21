@@ -12,8 +12,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,7 +112,7 @@ public class MultiplayerLogic {
             throw new IllegalStateException();
         }
         try {
-            Registry registry = LocateRegistry.getRegistry(host);
+            Registry registry = LocateRegistry.getRegistry(host, 8888);
             server = (IServer) registry.lookup("simulator");
             setGameState(GameState.CONNECTED);
         } catch (RemoteException | NotBoundException ex) {
@@ -122,7 +124,7 @@ public class MultiplayerLogic {
         try {
             game.message(msg);
         } catch (RemoteException e) {
-            e.printStackTrace( );
+            e.printStackTrace();
         }
     }
 
@@ -132,19 +134,26 @@ public class MultiplayerLogic {
         }
 
         try {
-            server.joinGame(name, "123", "testPlayer", new ClientCallback());
+            game = server.joinGame(name, "123", "testPlayer", new ClientCallback());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    public void joinGame(String name) {
+    public void joinGame(String name, String code, String player) {
         if (state != GameState.CONNECTED) {
             throw new IllegalStateException();
         }
+
+        try {
+            game = server.joinGame(name, code, player, 
+                    (IClientCallback) UnicastRemoteObject.exportObject(new ClientCallback(),0));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Set<String> listGames() {
+    public List<String> listGames() {
         if (state != GameState.CONNECTED) {
             throw new IllegalStateException();
         }
@@ -153,7 +162,7 @@ public class MultiplayerLogic {
             return server.listGames();
         } catch (RemoteException e) {
             e.printStackTrace();
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
     }
 

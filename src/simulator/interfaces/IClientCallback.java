@@ -7,14 +7,13 @@ package simulator.interfaces;
 
 import simulator.SimulatorMap;
 
-import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
  * @author 82wach1bif
  */
-public interface IClientCallback extends Serializable, Remote {
+public interface IClientCallback extends Remote {
 
     void onMessage(String msg) throws RemoteException;
 

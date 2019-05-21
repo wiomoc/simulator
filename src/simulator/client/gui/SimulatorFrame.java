@@ -7,7 +7,6 @@ package simulator.client.gui;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import simulator.SimulatorMap;
 import simulator.client.MultiplayerLogic;
@@ -76,9 +75,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         });
         
         jMenuItemGameJoin.addActionListener((a) -> {
-            GameList.openDialog(this, new ArrayList<>(logic.listGames()), (name) -> {
-                logic.joinGame(name);
-            });
+            GameJoinDialog.openDialog(this, logic);
         });
         
         jTextFieldMessage.addActionListener((a) -> {

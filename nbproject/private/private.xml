@@ -3,8 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/tank/home/82wach1bif/NetBeansProjects/Simulator/src/simulator/gui/MapComponent.java</file>
-            <file>file:/tank/home/82wach1bif/NetBeansProjects/Simulator/src/simulator/gui/SimulatorFrame.java</file>
+            <file>file:/tank/home/82wach1bif/NetBeansProjects/Simulator/src/simulator/client/gui/GameJoinDialog.java</file>
+            <file>file:/tank/home/82wach1bif/NetBeansProjects/Simulator/src/simulator/client/gui/SimulatorFrame.java</file>
         </group>
     </open-files>
 </project-private>

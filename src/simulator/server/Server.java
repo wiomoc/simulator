@@ -12,7 +12,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import simulator.SimulatorMap;
 import simulator.interfaces.IClientCallback;
@@ -34,32 +37,36 @@ public class Server implements IServer, Serializable {
         Registry localRegistry = LocateRegistry.createRegistry(8888);
 
         Server server = new Server();
-        
+
         UnicastRemoteObject.exportObject(server, 0);
-        
+
         localRegistry.bind("simulator", server);
+    }
+
+    private Server() {
+        games.put("ABC", new Game(new ArrayList<>(), null, "", "12"));
     }
 
     @Override
     public void addMap(SimulatorMap map) {
-       maps.put(map.getName(), map);
+        maps.put(map.getName(), map);
     }
 
     @Override
     public IRemoteGame createAndJoinGame(String name, String code, String mapName,
-            String playerName, IClientCallback callback) {
+            String playerName, IClientCallback callback) throws RemoteException {
         Player player = new Player(playerName, callback);
         ArrayList<Player> playerList = new ArrayList<>();
         playerList.add(player);
         Game game = new Game(playerList, maps.get(mapName), name, code);
         games.put(name, game);
 
-        return new RemoteGame(game, player);
+        return (IRemoteGame) UnicastRemoteObject.exportObject(new RemoteGame(game, player), 8888);
     }
 
     @Override
-    public IRemoteGame joinGame(String name, String code, String playerName, 
-            IClientCallback callback) {
+    public IRemoteGame joinGame(String name, String code, String playerName,
+            IClientCallback callback) throws RemoteException {
         Game game = games.get(name);
         if (!game.getCode().equals(code)) {
             return null;
@@ -68,17 +75,17 @@ public class Server implements IServer, Serializable {
         Player player = new Player(playerName, callback);
 
         game.join(player);
-        return new RemoteGame(game, player);
+        return (IRemoteGame) UnicastRemoteObject.exportObject(new RemoteGame(game, player), 8888);
     }
 
     @Override
-    public Set<String> listGames() {
-        return games.keySet();
+    public List<String> listGames() {
+        return new ArrayList<>(games.keySet());
     }
 
     @Override
-    public Set<String> listMaps() {
-        return maps.keySet();
+    public List<String> listMaps() {
+        return new ArrayList<>(maps.keySet());
     }
 
 }

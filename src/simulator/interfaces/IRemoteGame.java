@@ -5,7 +5,6 @@
  */
 package simulator.interfaces;
 
-import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -13,7 +12,7 @@ import java.rmi.RemoteException;
  *
  * @author 82wach1bif
  */
-public interface IRemoteGame extends Remote, Serializable {
+public interface IRemoteGame extends Remote {
     void message(String msg) throws RemoteException;
     void playerTurn(String msg) throws RemoteException;
 }
