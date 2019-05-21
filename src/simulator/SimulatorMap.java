@@ -28,6 +28,7 @@ public class SimulatorMap implements Serializable {
     private Line2D.Float secondStartLine;
     private int width;
     private int heigth;
+    private int rasterSize;
 
     private SimulatorMap(int width, int heigth,
                          GeneralPath outer,
@@ -40,6 +41,7 @@ public class SimulatorMap implements Serializable {
         this.inner = inner;
         this.firstStartLine = firstStartLine;
         this.secondStartLine = secondStartLine;
+        this.rasterSize = 15;
     }
 
     public GeneralPath getOuter() {
@@ -70,6 +72,9 @@ public class SimulatorMap implements Serializable {
         return name;
     }
 
+    public int getRasterSize() {
+        return rasterSize;
+    }
 
     private static List<Integer> readLine(BufferedReader reader) throws IOException {
         String line = reader.readLine();

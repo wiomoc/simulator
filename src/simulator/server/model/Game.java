@@ -13,11 +13,11 @@ import simulator.SimulatorMap;
  * @author 82wach1bif
  */
 public class Game {
-    
-  private List<Player> players;
-  private SimulatorMap map;
-  private String name;
-  private String code;
+
+    private List<Player> players;
+    private SimulatorMap map;
+    private String name;
+    private String code;
 
     public Game(List<Player> players, SimulatorMap map, String name, String code) {
         this.players = players;
@@ -59,12 +59,15 @@ public class Game {
     }
 
     public void join(Player player) {
-       players.add(player);
+        players.add(player);
     }
-    
+
     public void onMessage(Player player, String message) {
-        for(Player other: players) {
-            other.sendMessage(player.getName() +": "+ message);
+        for (Player other : players) {
+            other.sendMessage(player.getName() + ": " + message);
         }
+    }
+
+    public void setPlayerTurn(Player player, int position) {
     }
 }
