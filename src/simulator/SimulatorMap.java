@@ -17,23 +17,29 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author 82wach1bif
  */
 public class SimulatorMap implements Serializable {
 
+    private String name;
     private GeneralPath outer;
     private GeneralPath inner;
-    private Line2D.Float startLine;
+    private Line2D.Float firstStartLine;
+    private Line2D.Float secondStartLine;
     private int width;
     private int heigth;
 
-    private SimulatorMap(int width, int heigth, GeneralPath outer, GeneralPath inner, Line2D.Float startLine) {
+    private SimulatorMap(int width, int heigth,
+                         GeneralPath outer,
+                         GeneralPath inner,
+                         Line2D.Float firstStartLine,
+                         Line2D.Float secondStartLine) {
         this.width = width;
         this.heigth = heigth;
         this.outer = outer;
         this.inner = inner;
-        this.startLine = startLine;
+        this.firstStartLine = firstStartLine;
+        this.secondStartLine = secondStartLine;
     }
 
     public GeneralPath getOuter() {
@@ -44,8 +50,12 @@ public class SimulatorMap implements Serializable {
         return inner;
     }
 
-    public Line2D getStartLine() {
-        return startLine;
+    public Line2D getFirstStartLine() {
+        return firstStartLine;
+    }
+
+    public Line2D getSecondStartLine() {
+        return secondStartLine;
     }
 
     public int getWidth() {
@@ -55,7 +65,11 @@ public class SimulatorMap implements Serializable {
     public int getHeigth() {
         return heigth;
     }
-       
+
+    public String getName() {
+        return name;
+    }
+
 
     private static List<Integer> readLine(BufferedReader reader) throws IOException {
         String line = reader.readLine();
@@ -123,10 +137,10 @@ public class SimulatorMap implements Serializable {
             line = readLine(reader);
             int rasterSize = line.get(0);
             line = readLine(reader);
-            Line2D.Float startLine = new Line2D.Float(line.get(0), line.get(1),line.get(2), line.get(3));
+            Line2D.Float startLine = new Line2D.Float(line.get(0), line.get(1), line.get(2), line.get(3));
 
 
-            return new SimulatorMap(width, height, createPath(outterPoints), createPath(innerPoints), startLine);
+            return new SimulatorMap(width, height, createPath(outterPoints), createPath(innerPoints), startLine, null);
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }

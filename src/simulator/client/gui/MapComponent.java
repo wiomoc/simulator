@@ -49,7 +49,7 @@ public class MapComponent extends JPanel {
 
         gr.setColor(Color.RED);
         gr.setStroke(new BasicStroke(5));
-        gr.draw(map.getStartLine());
+        gr.draw(map.getFirstStartLine());
     }
 
 }

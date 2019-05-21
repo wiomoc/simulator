@@ -16,9 +16,13 @@ import simulator.SimulatorMap;
  * @author 82wach1bif
  */
 public interface IServer extends Remote, Serializable {
-    IRemoteGame createAndJoinGame(String name, String code, SimulatorMap map, String playerName, IClientCallback callback) throws RemoteException;
+    IRemoteGame createAndJoinGame(String name, String code, String mapName, String playerName, IClientCallback callback) throws RemoteException;
 
     IRemoteGame joinGame(String name, String code, String playerName, IClientCallback callback) throws RemoteException;
 
     Set<String> listGames() throws RemoteException;
+
+    void addMap(SimulatorMap map) throws RemoteException;
+
+    Set<String> listMaps() throws RemoteException;
 }

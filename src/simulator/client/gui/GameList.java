@@ -5,17 +5,24 @@
  */
 package simulator.client.gui;
 
+import java.util.List;
+import java.util.function.Consumer;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+
 /**
  *
  * @author 82wach1bif
  */
 public class GameList extends javax.swing.JDialog {
 
+    public DefaultListModel<String> gameListModel;
+    
     /**
      * Creates new form GameList
      */
-    public GameList(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public GameList(JFrame parent, List<String> games) {
+        super(parent, true);
         initComponents();
     }
 
@@ -28,26 +35,33 @@ public class GameList extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jPanel1 = new javax.swing.JPanel();
+        jButtonCancel = new javax.swing.JButton();
+        jButtonOk = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jList1.setModel(gameListModel);
+        jScrollPane1.setViewportView(jList1);
+
+        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        jButtonCancel.setLabel("Cancel");
+        jPanel1.add(jButtonCancel);
+
+        jButtonOk.setText("Ok");
+        jPanel1.add(jButtonOk);
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    public static void openDialog(JFrame owner,List<String> games ,Consumer<String> gamenameCallback) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -72,20 +86,17 @@ public class GameList extends javax.swing.JDialog {
         //</editor-fold>
 
         /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                GameList dialog = new GameList(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            GameList dialog = new GameList(owner, games);
+            dialog.setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonOk;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,6 +7,7 @@ package simulator.client.gui;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import simulator.SimulatorMap;
 import simulator.client.MultiplayerLogic;
@@ -45,6 +46,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         @Override
         public void onGameStateChange(MultiplayerLogic.GameState state) {
             jMenuItemGameLoad.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
+            //jMenuItemGameJoin.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
             jMenuItemGameStart.setEnabled(state == MultiplayerLogic.GameState.MAP_LOADED);
 
         }
@@ -73,6 +75,12 @@ public class SimulatorFrame extends javax.swing.JFrame {
             System.exit(0);
         });
         
+        jMenuItemGameJoin.addActionListener((a) -> {
+            GameList.openDialog(this, new ArrayList<>(logic.listGames()), (name) -> {
+                logic.joinGame(name);
+            });
+        });
+        
         jTextFieldMessage.addActionListener((a) -> {
             logic.sendMessage(jTextFieldMessage.getText());
         });
@@ -88,6 +96,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jTextAreaMessages = new javax.swing.JTextArea();
@@ -97,10 +106,13 @@ public class SimulatorFrame extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItemGameLoad = new javax.swing.JMenuItem();
         jMenuItemGameStart = new javax.swing.JMenuItem();
+        jMenuItemGameJoin = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItemGameQuit = new javax.swing.JMenuItem();
 
         jMenuItem3.setText("jMenuItem3");
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Simulator");
@@ -125,7 +137,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         );
         mapComponentLayout.setVerticalGroup(
             mapComponentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 409, Short.MAX_VALUE)
+            .addGap(0, 376, Short.MAX_VALUE)
         );
 
         getContentPane().add(mapComponent, java.awt.BorderLayout.CENTER);
@@ -137,6 +149,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         jMenuItemGameStart.setText("Spiel starten");
         jMenu1.add(jMenuItemGameStart);
+
+        jMenuItemGameJoin.setText("Spiel beitreten");
+        jMenu1.add(jMenuItemGameJoin);
         jMenu1.add(jSeparator1);
 
         jMenuItemGameQuit.setText("Beenden");
@@ -185,7 +200,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItemGameJoin;
     private javax.swing.JMenuItem jMenuItemGameLoad;
     private javax.swing.JMenuItem jMenuItemGameQuit;
     private javax.swing.JMenuItem jMenuItemGameStart;

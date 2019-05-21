@@ -28,6 +28,7 @@ import simulator.server.model.Player;
 public class Server implements IServer, Serializable {
 
     private HashMap<String, Game> games = new HashMap<>();
+    private HashMap<String, SimulatorMap> maps = new HashMap<>();
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
         Registry localRegistry = LocateRegistry.createRegistry(8888);
@@ -40,12 +41,17 @@ public class Server implements IServer, Serializable {
     }
 
     @Override
-    public IRemoteGame createAndJoinGame(String name, String code, SimulatorMap map,
+    public void addMap(SimulatorMap map) {
+       maps.put(map.getName(), map);
+    }
+
+    @Override
+    public IRemoteGame createAndJoinGame(String name, String code, String mapName,
             String playerName, IClientCallback callback) {
         Player player = new Player(playerName, callback);
         ArrayList<Player> playerList = new ArrayList<>();
         playerList.add(player);
-        Game game = new Game(playerList, map, name, code);
+        Game game = new Game(playerList, maps.get(mapName), name, code);
         games.put(name, game);
 
         return new RemoteGame(game, player);
@@ -68,6 +74,11 @@ public class Server implements IServer, Serializable {
     @Override
     public Set<String> listGames() {
         return games.keySet();
+    }
+
+    @Override
+    public Set<String> listMaps() {
+        return maps.keySet();
     }
 
 }

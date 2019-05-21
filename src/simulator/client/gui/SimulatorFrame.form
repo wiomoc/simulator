@@ -7,6 +7,11 @@
         <Property name="text" type="java.lang.String" value="jMenuItem3"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.JMenuItem" name="jMenuItem1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jMenuItem1"/>
+      </Properties>
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
@@ -22,6 +27,11 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemGameStart">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Spiel starten"/>
+              </Properties>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemGameJoin">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Spiel beitreten"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator1">
@@ -103,7 +113,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="409" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="376" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

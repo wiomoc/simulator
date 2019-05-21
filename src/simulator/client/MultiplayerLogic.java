@@ -122,7 +122,7 @@ public class MultiplayerLogic {
         try {
             game.message(msg);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            e.printStackTrace( );
         }
     }
 
