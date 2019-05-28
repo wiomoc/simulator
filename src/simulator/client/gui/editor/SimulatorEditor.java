@@ -13,6 +13,7 @@ public class SimulatorEditor extends javax.swing.JFrame {
      */
     public SimulatorEditor() {
         initComponents();
+        setLocationRelativeTo(null);
         
         jToggleButtonInner.setSelected(true);
         

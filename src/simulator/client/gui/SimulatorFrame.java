@@ -64,6 +64,7 @@ public class SimulatorFrame extends JFrame {
      */
     public SimulatorFrame() {
         initComponents();
+        setLocationRelativeTo(null);
         logic = new MultiplayerLogic(new LogicListener());
         logic.connect("localhost");
 

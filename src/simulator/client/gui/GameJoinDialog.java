@@ -18,6 +18,7 @@ public class GameJoinDialog extends JDialog {
         super(parent, true);
         logic.listGames().forEach(gameListModel::addElement);
         initComponents();
+        setLocationRelativeTo(null);
         jButtonCancel.addActionListener((l) -> {
             this.setVisible(false);
         });

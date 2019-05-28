@@ -18,6 +18,7 @@ public class GameCreateDialog extends JDialog {
         super(parent, true);
         logic.listMaps().forEach(gameListModel::addElement);
         initComponents();
+        setLocationRelativeTo(null);
         jButtonCancel.addActionListener((l) -> {
             this.setVisible(false);
         });
