@@ -140,7 +140,7 @@ public class GameJoinDialog extends JDialog {
             dialog.setVisible(true);
         });
     }
-
+    // CHECKSTYLE:OFF
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOk;

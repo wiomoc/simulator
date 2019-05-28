@@ -23,9 +23,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#xd6;ffne Editor"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemOpenEditorActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemGameStart">
               <Properties>
