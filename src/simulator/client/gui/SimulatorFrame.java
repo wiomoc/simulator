@@ -1,5 +1,6 @@
 package simulator.client.gui;
 
+import simulator.client.gui.editor.SimulatorEditor;
 import java.awt.Color;
 import java.awt.EventQueue;
 import simulator.Point;

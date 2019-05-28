@@ -1,4 +1,6 @@
-package simulator.client.gui;
+package simulator.client.gui.editor;
+
+import simulator.client.gui.GameJoinDialog;
 
 /**
  *
@@ -11,9 +13,29 @@ public class SimulatorEditor extends javax.swing.JFrame {
      */
     public SimulatorEditor() {
         initComponents();
+        
+        jToggleButtonInner.setSelected(true);
+        
+        jToggleButtonInner.addActionListener((a) -> {
+            jToggleButtonOutter.setSelected(false);
+            jToggleButtonStart.setSelected(false);
+            mapEditComponent.selectInner();
+        });
+        
+        jToggleButtonOutter.addActionListener((a) -> {
+            jToggleButtonInner.setSelected(false);
+            jToggleButtonStart.setSelected(false);
+            mapEditComponent.selectOutter();
+        });
+        
+        jToggleButtonStart.addActionListener((a) -> {
+            jToggleButtonInner.setSelected(false);
+            jToggleButtonOutter.setSelected(false);
+            mapEditComponent.selectStart();
+        });
     }
-
-        public static void open() {
+    
+    public static void open() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -46,7 +68,7 @@ public class SimulatorEditor extends javax.swing.JFrame {
             editor.setVisible(true);
         });
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,6 +78,11 @@ public class SimulatorEditor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToolBar1 = new javax.swing.JToolBar();
+        jToggleButtonInner = new javax.swing.JToggleButton();
+        jToggleButtonOutter = new javax.swing.JToggleButton();
+        jToggleButtonStart = new javax.swing.JToggleButton();
+        mapEditComponent = new simulator.client.gui.editor.MapEditComponent();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemOpen = new javax.swing.JMenuItem();
@@ -65,14 +92,44 @@ public class SimulatorEditor extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Simulator - Editor");
 
+        jToolBar1.setRollover(true);
+
+        jToggleButtonInner.setText("Inner");
+        jToggleButtonInner.setFocusable(false);
+        jToggleButtonInner.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButtonInner.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jToggleButtonInner);
+
+        jToggleButtonOutter.setText("Outter");
+        jToggleButtonOutter.setFocusable(false);
+        jToggleButtonOutter.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButtonOutter.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jToggleButtonOutter);
+
+        jToggleButtonStart.setText("Start");
+        jToggleButtonStart.setFocusable(false);
+        jToggleButtonStart.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButtonStart.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(jToggleButtonStart);
+
+        getContentPane().add(jToolBar1, java.awt.BorderLayout.PAGE_START);
+
+        javax.swing.GroupLayout mapEditComponentLayout = new javax.swing.GroupLayout(mapEditComponent);
+        mapEditComponent.setLayout(mapEditComponentLayout);
+        mapEditComponentLayout.setHorizontalGroup(
+            mapEditComponentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 483, Short.MAX_VALUE)
+        );
+        mapEditComponentLayout.setVerticalGroup(
+            mapEditComponentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 283, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(mapEditComponent, java.awt.BorderLayout.CENTER);
+
         jMenu1.setText("File");
 
         jMenuItemOpen.setText("Öffne Karte");
-        jMenuItemOpen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemOpenActionPerformed(evt);
-            }
-        });
         jMenu1.add(jMenuItemOpen);
 
         jMenuItemSave.setText("Speicher Karte");
@@ -85,23 +142,8 @@ public class SimulatorEditor extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jMenuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOpenActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -110,5 +152,10 @@ public class SimulatorEditor extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenuItem jMenuItemUpload;
+    private javax.swing.JToggleButton jToggleButtonInner;
+    private javax.swing.JToggleButton jToggleButtonOutter;
+    private javax.swing.JToggleButton jToggleButtonStart;
+    private javax.swing.JToolBar jToolBar1;
+    private simulator.client.gui.editor.MapEditComponent mapEditComponent;
     // End of variables declaration//GEN-END:variables
 }
