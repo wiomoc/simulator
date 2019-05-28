@@ -8,6 +8,7 @@ package simulator.server.model;
 import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.List;
+import simulator.Point;
 
 import simulator.interfaces.IClientCallback;
 
@@ -19,7 +20,7 @@ public class Player {
     private IClientCallback clientCallback;
     private int id;
     private String name;
-    private List<Integer> points;
+    private List<Point> points;
     private Color color;
     private boolean alive;
 

@@ -29,11 +29,6 @@ public class RemoteGame implements IRemoteGame {
     }
 
     @Override
-    public void playerTurn(String msg) {
-    
-    }
-
-    @Override
     public void setPlayerTurn(int position) throws RemoteException {
        game.setPlayerTurn(player, position);
     }

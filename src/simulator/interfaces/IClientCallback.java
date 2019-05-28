@@ -5,6 +5,7 @@
  */
 package simulator.interfaces;
 
+import java.awt.Color;
 import simulator.SimulatorMap;
 
 import java.rmi.Remote;
@@ -23,4 +24,6 @@ public interface IClientCallback extends Remote {
     void onGameFinished() throws RemoteException;
     
     void awaitPlayerTurn(Point point) throws RemoteException;
+    
+    void onPlayerTurn(Point point, Color color) throws RemoteException;
 }

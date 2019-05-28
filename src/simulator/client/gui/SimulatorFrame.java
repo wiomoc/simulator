@@ -44,7 +44,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         @Override
         public void onGameStateChange(MultiplayerLogic.GameState state) {
-            jMenuItemGameLoad.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
+            //jMenuItemOpenEditor.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
             //jMenuItemGameJoin.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
             jMenuItemGameStart.setEnabled(state == MultiplayerLogic.GameState.MAP_LOADED);
 
@@ -67,8 +67,8 @@ public class SimulatorFrame extends javax.swing.JFrame {
         logic = new MultiplayerLogic(new LogicListener());
         logic.connect("localhost");
 
-        jMenuItemGameLoad.addActionListener((a) -> {
-            Utils.chooseMapFile(this, logic::loadMap);
+        jMenuItemOpenEditor.addActionListener((a) -> {
+           SimulatorEditor.open();
         });
 
         jMenuItemGameStart.addActionListener((a) -> {
@@ -110,7 +110,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         mapComponent = new simulator.client.gui.MapComponent();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItemGameLoad = new javax.swing.JMenuItem();
+        jMenuItemOpenEditor = new javax.swing.JMenuItem();
         jMenuItemGameStart = new javax.swing.JMenuItem();
         jMenuItemGameJoin = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -150,8 +150,13 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         jMenu1.setText("Spiel");
 
-        jMenuItemGameLoad.setText("Spiel laden");
-        jMenu1.add(jMenuItemGameLoad);
+        jMenuItemOpenEditor.setText("Öffne Editor");
+        jMenuItemOpenEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemOpenEditorActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemOpenEditor);
 
         jMenuItemGameStart.setText("Spiel starten");
         jMenu1.add(jMenuItemGameStart);
@@ -169,6 +174,10 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItemOpenEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOpenEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemOpenEditorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,9 +218,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItemGameJoin;
-    private javax.swing.JMenuItem jMenuItemGameLoad;
     private javax.swing.JMenuItem jMenuItemGameQuit;
     private javax.swing.JMenuItem jMenuItemGameStart;
+    private javax.swing.JMenuItem jMenuItemOpenEditor;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;

@@ -29,16 +29,16 @@ public class MapComponent extends JPanel {
 
     class Turn {
 
-        private Point pointer;
+        private Point point;
         private Color color;
 
         public Turn(Point pointer, Color color) {
-            this.pointer = pointer;
+            this.point = pointer;
             this.color = color;
         }
 
-        public Point getPointer() {
-            return pointer;
+        public Point getPoint() {
+            return point;
         }
 
         public Color getColor() {
@@ -147,7 +147,7 @@ public class MapComponent extends JPanel {
         gr.setStroke(new BasicStroke(5));
         for (Turn turn : turns) {
             gr.setColor(turn.getColor());
-            gr.drawRoundRect(turn.getPointer().getX(), turn.getPointer().getY(),
+            gr.drawRoundRect(turn.getPoint().getX(), turn.getPoint().getY(),
                     map.getRasterSize() / 2, map.getRasterSize() / 2,
                     map.getRasterSize() / 2 - 1, map.getRasterSize() / 2 - 1);
         }
