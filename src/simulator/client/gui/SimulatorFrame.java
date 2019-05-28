@@ -6,8 +6,8 @@
 package simulator.client.gui;
 
 import java.awt.Color;
-import java.awt.Point;
 import javax.swing.JOptionPane;
+import simulator.Point;
 import simulator.SimulatorMap;
 import simulator.client.MultiplayerLogic;
 
@@ -24,17 +24,17 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         @Override
         public void onMessage(String msg) {
-            SimulatorFrame.this.jTextAreaMessages.setText(SimulatorFrame.this.jTextAreaMessages.getText()  + msg + "\n");
+            SimulatorFrame.this.jTextAreaMessages.setText(SimulatorFrame.this.jTextAreaMessages.getText() + msg + "\n");
         }
 
         @Override
         public void onMapLoaded(SimulatorMap map) {
-             SimulatorFrame.this.mapComponent.setMap(map);
+            SimulatorFrame.this.mapComponent.setMap(map);
         }
 
         @Override
         public void onPlayerTurn(Point point, Color color) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            SimulatorFrame.this.mapComponent.onPlayerTurn(point, color);
         }
 
         @Override
@@ -48,6 +48,14 @@ public class SimulatorFrame extends javax.swing.JFrame {
             //jMenuItemGameJoin.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
             jMenuItemGameStart.setEnabled(state == MultiplayerLogic.GameState.MAP_LOADED);
 
+        }
+
+        @Override
+        public void awaitPlayerTurn(Point point) {
+            mapComponent.requestFocus();
+            SimulatorFrame.this.mapComponent.awaitPlayerTurn(point, (turn) -> {
+                logic.setPlayerTurn(turn);
+            });
         }
     }
 
@@ -64,23 +72,24 @@ public class SimulatorFrame extends javax.swing.JFrame {
         });
 
         jMenuItemGameStart.addActionListener((a) -> {
-           int playerCount = Integer.parseUnsignedInt(JOptionPane.showInputDialog(this, "Wie viele Spieler ?"));
-            
-           // logic.startGame(playerCount);
+            int playerCount = Integer.parseUnsignedInt(JOptionPane.showInputDialog(this, "Wie viele Spieler ?"));
+
+            // logic.startGame(playerCount);
         });
 
         jMenuItemGameQuit.addActionListener((a) -> {
             logic.quitGame();
             System.exit(0);
         });
-        
+
         jMenuItemGameJoin.addActionListener((a) -> {
             GameJoinDialog.openDialog(this, logic);
         });
-        
+
         jTextFieldMessage.addActionListener((a) -> {
             logic.sendMessage(jTextFieldMessage.getText());
         });
+
     }
 
     /**

@@ -9,6 +9,7 @@ import simulator.SimulatorMap;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import simulator.Point;
 
 /**
  * @author 82wach1bif
@@ -20,4 +21,6 @@ public interface IClientCallback extends Remote {
     void onMapLoaded(SimulatorMap map)throws RemoteException;
 
     void onGameFinished() throws RemoteException;
+    
+    void awaitPlayerTurn(Point point) throws RemoteException;
 }

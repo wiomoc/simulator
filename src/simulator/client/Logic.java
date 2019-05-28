@@ -45,6 +45,8 @@ public class Logic {
         void onMapLoaded(SimulatorMap map);
 
         void onPlayerTurn(Point point, Color color);
+        
+        void awaitPlayerTurn(Point point);
 
         void onGameFinished();
 

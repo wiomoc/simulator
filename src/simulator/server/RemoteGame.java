@@ -5,6 +5,7 @@
  */
 package simulator.server;
 
+import java.rmi.RemoteException;
 import simulator.interfaces.IRemoteGame;
 import simulator.server.model.Game;
 import simulator.server.model.Player;
@@ -30,6 +31,11 @@ public class RemoteGame implements IRemoteGame {
     @Override
     public void playerTurn(String msg) {
     
+    }
+
+    @Override
+    public void setPlayerTurn(int position) throws RemoteException {
+       game.setPlayerTurn(player, position);
     }
     
 }

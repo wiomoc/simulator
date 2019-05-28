@@ -6,7 +6,6 @@
 package simulator.client;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.io.File;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import simulator.Point;
 
 import simulator.SimulatorMap;
 import simulator.interfaces.IClientCallback;
@@ -62,6 +62,8 @@ public class MultiplayerLogic {
 
         void onPlayerTurn(Point point, Color color);
 
+        void awaitPlayerTurn(Point point);
+
         void onGameFinished();
 
         void onGameStateChange(GameState state);
@@ -83,6 +85,13 @@ public class MultiplayerLogic {
         public void onGameFinished() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+        @Override
+        public void awaitPlayerTurn(Point point) throws RemoteException {
+            setGameState(GameState.AWAIT_PLAYER_TURN);
+            listener.awaitPlayerTurn(point);
+        }
+
     }
 
     public MultiplayerLogic(Listener listener) {
@@ -90,6 +99,12 @@ public class MultiplayerLogic {
         setGameState(GameState.UNCONNECTED);
         listener.onMessage("Hello to Simulator");
         listener.onMessage("Please connect to Server");
+
+        listener.onMapLoaded(SimulatorMap.loadFromFile(new File("game.csv")));
+
+        listener.onPlayerTurn(new Point(100, 100), Color.yellow);
+        listener.onPlayerTurn(new Point(200, 100), Color.red);
+        listener.awaitPlayerTurn(new Point(192, 192));
     }
 
     private void setGameState(GameState state) {
@@ -146,8 +161,8 @@ public class MultiplayerLogic {
         }
 
         try {
-            game = server.joinGame(name, code, player, 
-                    (IClientCallback) UnicastRemoteObject.exportObject(new ClientCallback(),0));
+            game = server.joinGame(name, code, player,
+                    (IClientCallback) UnicastRemoteObject.exportObject(new ClientCallback(), 0));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -170,6 +185,13 @@ public class MultiplayerLogic {
         if (state != GameState.AWAIT_PLAYER_TURN) {
             throw new IllegalStateException();
         }
+
+        try {
+            game.setPlayerTurn(position);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void quitGame() {
