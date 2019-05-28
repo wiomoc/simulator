@@ -3,3 +3,5 @@
 /out/
 svn-*
 /dist/
+/.idea/
+/nbproject/

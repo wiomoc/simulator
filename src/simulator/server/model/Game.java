@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simulator.server.model;
 
 import java.util.List;
@@ -38,10 +33,6 @@ public class Game {
         return map;
     }
 
-    public void setMap(SimulatorMap map) {
-        this.map = map;
-    }
-
     public String getName() {
         return name;
     }
@@ -52,10 +43,6 @@ public class Game {
 
     public String getCode() {
         return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public void join(Player player) {

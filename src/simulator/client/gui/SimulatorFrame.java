@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simulator.client.gui;
 
 import java.awt.Color;
-import javax.swing.JOptionPane;
 import simulator.Point;
 import simulator.SimulatorMap;
 import simulator.client.MultiplayerLogic;
@@ -18,7 +12,6 @@ import simulator.client.MultiplayerLogic;
 public class SimulatorFrame extends javax.swing.JFrame {
 
     private MultiplayerLogic logic;
-    private SimulatorMap map;
 
     private class LogicListener implements MultiplayerLogic.Listener {
 
@@ -72,9 +65,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         });
 
         jMenuItemGameStart.addActionListener((a) -> {
-            int playerCount = Integer.parseUnsignedInt(JOptionPane.showInputDialog(this, "Wie viele Spieler ?"));
 
-            // logic.startGame(playerCount);
         });
 
         jMenuItemGameQuit.addActionListener((a) -> {
@@ -89,7 +80,6 @@ public class SimulatorFrame extends javax.swing.JFrame {
         jTextFieldMessage.addActionListener((a) -> {
             logic.sendMessage(jTextFieldMessage.getText());
         });
-
     }
 
     /**

@@ -1,9 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simulator.server;
+
+import simulator.SimulatorMap;
+import simulator.interfaces.IClientCallback;
+import simulator.interfaces.IRemoteGame;
+import simulator.interfaces.IServer;
+import simulator.server.model.Game;
+import simulator.server.model.Player;
 
 import java.io.Serializable;
 import java.rmi.AlreadyBoundException;
@@ -12,17 +14,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import simulator.SimulatorMap;
-import simulator.interfaces.IClientCallback;
-import simulator.interfaces.IServer;
-import simulator.server.model.Game;
-import simulator.interfaces.IRemoteGame;
-import simulator.server.model.Player;
 
 /**
  *

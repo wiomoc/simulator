@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simulator.client.gui;
 
 import java.awt.event.KeyEvent;
@@ -19,11 +14,8 @@ import simulator.client.MultiplayerLogic;
  */
 public class GameJoinDialog extends javax.swing.JDialog {
 
-    public DefaultListModel<String> gameListModel = new DefaultListModel<>();
+    private DefaultListModel<String> gameListModel = new DefaultListModel<>();
 
-    /**
-     * Creates new form GameList
-     */
     private GameJoinDialog(JFrame parent, MultiplayerLogic logic) {
         super(parent, true);
         logic.listGames().forEach(gameListModel::addElement);
