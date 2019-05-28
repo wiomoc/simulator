@@ -1,6 +1,7 @@
 package simulator.client.gui;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import simulator.Point;
 import simulator.SimulatorMap;
 import simulator.client.MultiplayerLogic;
@@ -19,17 +20,22 @@ public class SimulatorFrame extends JFrame {
 
         @Override
         public void onMessage(String msg) {
-            SimulatorFrame.this.jTextAreaMessages.setText(SimulatorFrame.this.jTextAreaMessages.getText() + msg + "\n");
+            jTextAreaMessages.setText(jTextAreaMessages.getText() + msg + "\n");
+
+            EventQueue.invokeLater(() -> {
+                JScrollBar vertical = jScrollPane1.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
+            });
         }
 
         @Override
         public void onMapLoaded(SimulatorMap map) {
-            SimulatorFrame.this.mapComponent.setMap(map);
+            mapComponent.setMap(map);
         }
 
         @Override
         public void onPlayerTurn(Point point, Color color) {
-            SimulatorFrame.this.mapComponent.onPlayerTurn(point, color);
+            mapComponent.onPlayerTurn(point, color);
         }
 
         @Override
@@ -38,17 +44,15 @@ public class SimulatorFrame extends JFrame {
         }
 
         @Override
-        public void onGameStateChange(MultiplayerLogic.GameState state) {
-            //jMenuItemOpenEditor.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
-            //jMenuItemGameJoin.setEnabled(state == MultiplayerLogic.GameState.CONNECTED);
-            jMenuItemGameStart.setEnabled(state == MultiplayerLogic.GameState.MAP_LOADED);
-
+        public void onGameStateChange() {
+            jMenuItemGameJoin.setEnabled(logic.isConnected() && !logic.isInGame());
+            jMenuItemGameStart.setEnabled(logic.isConnected() && !logic.isInGame());
         }
 
         @Override
         public void awaitPlayerTurn(Point point) {
             mapComponent.requestFocus();
-            SimulatorFrame.this.mapComponent.awaitPlayerTurn(point, (turn) -> {
+            mapComponent.awaitPlayerTurn(point, (turn) -> {
                 logic.setPlayerTurn(turn);
             });
         }
@@ -63,11 +67,11 @@ public class SimulatorFrame extends JFrame {
         logic.connect("localhost");
 
         jMenuItemOpenEditor.addActionListener((a) -> {
-           SimulatorEditor.open();
+            SimulatorEditor.open();
         });
 
         jMenuItemGameStart.addActionListener((a) -> {
-
+            GameCreateDialog.openDialog(this, logic);
         });
 
         jMenuItemGameQuit.addActionListener((a) -> {
@@ -81,6 +85,7 @@ public class SimulatorFrame extends JFrame {
 
         jTextFieldMessage.addActionListener((a) -> {
             logic.sendMessage(jTextFieldMessage.getText());
+            jTextFieldMessage.setText("");
         });
     }
 

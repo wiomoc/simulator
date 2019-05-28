@@ -1,5 +1,6 @@
 package simulator.server;
 
+import java.io.File;
 import simulator.SimulatorMap;
 import simulator.interfaces.IClientCallback;
 import simulator.interfaces.IRemoteGame;
@@ -31,14 +32,12 @@ public class Server implements IServer, Serializable {
 
         Server server = new Server();
 
+        server.addMap(SimulatorMap.loadFromFile(new File("game.csv")));
         UnicastRemoteObject.exportObject(server, 0);
-
         localRegistry.bind("simulator", server);
     }
 
-    private Server() {
-        games.put("ABC", new Game(new ArrayList<>(), null, "", "12"));
-    }
+    private Server() { }
 
     @Override
     public void addMap(SimulatorMap map) {
@@ -46,13 +45,13 @@ public class Server implements IServer, Serializable {
     }
 
     @Override
-    public IRemoteGame createAndJoinGame(String name, String code, String mapName,
-            String playerName, IClientCallback callback) throws RemoteException {
+    public IRemoteGame createAndJoinGame(String name, String mapName,
+            String playerName, int playerCount, IClientCallback callback) throws RemoteException {
         Player player = new Player(playerName, callback);
-        ArrayList<Player> playerList = new ArrayList<>();
-        playerList.add(player);
-        Game game = new Game(playerList, maps.get(mapName), name, code);
+        Game game = new Game(maps.get(mapName), name, playerCount);
+        game.join(player);
         games.put(name, game);
+        callback.onMessage("Code: " + game.getCode());
 
         return (IRemoteGame) UnicastRemoteObject.exportObject(new RemoteGame(game, player), 8888);
     }

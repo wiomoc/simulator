@@ -30,12 +30,14 @@ public class SimulatorMap implements Serializable {
     private int heigth;
     private int rasterSize;
 
-    private SimulatorMap(int width, int heigth,
-                         int rastersize,
-                         GeneralPath outer,
-                         GeneralPath inner,
-                         Line2D.Float firstStartLine,
-                         Line2D.Float secondStartLine) {
+    private SimulatorMap(String name,
+            int width, int heigth,
+            int rastersize,
+            GeneralPath outer,
+            GeneralPath inner,
+            Line2D.Float firstStartLine,
+            Line2D.Float secondStartLine) {
+        this.name = name;
         this.width = width;
         this.heigth = heigth;
         this.rasterSize = rastersize;
@@ -144,9 +146,10 @@ public class SimulatorMap implements Serializable {
             int rasterSize = line.get(0);
             line = readLine(reader);
             Line2D.Float startLine = new Line2D.Float(line.get(0), line.get(1), line.get(2), line.get(3));
+            
+            String name = file.getName();
 
-
-            return new SimulatorMap(width, height, rasterSize, createPath(outterPoints), createPath(innerPoints), startLine, null);
+            return new SimulatorMap(name, width, height, rasterSize, createPath(outterPoints), createPath(innerPoints), startLine, null);
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }

@@ -10,7 +10,7 @@ import simulator.SimulatorMap;
  * @author 82wach1bif
  */
 public interface IServer extends Remote {
-    IRemoteGame createAndJoinGame(String name, String code, String mapName, String playerName, IClientCallback callback) throws RemoteException;
+    IRemoteGame createAndJoinGame(String gameName, String mapName, String playerName, int playerCount, IClientCallback callback) throws RemoteException;
 
     IRemoteGame joinGame(String name, String code, String playerName, IClientCallback callback) throws RemoteException;
 

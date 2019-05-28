@@ -22,107 +22,90 @@ import simulator.interfaces.IServer;
  * @author 82wach1bif
  */
 public class MultiplayerLogic {
-    
+
     private SimulatorMap map;
-    private GameState state;
     private Listener listener;
     private IServer server;
     private IRemoteGame game;
-    
-    public enum GameState {
-        UNCONNECTED,
-        CONNECTED,
-        MAP_LOADED,
-        AWAIT_PLAYER_TURN,
-        FINISHED
-    }
-    
+    private boolean connected;
+    private boolean inGame;
+
     public interface Listener {
-        
+
         void onMessage(String msg);
-        
+
         void onMapLoaded(SimulatorMap map);
-        
+
         void onPlayerTurn(Point point, Color color);
-        
+
         void awaitPlayerTurn(Point point);
-        
+
         void onGameFinished();
-        
-        void onGameStateChange(GameState state);
+
+        void onGameStateChange();
     }
-    
+
     public class ClientCallback implements IClientCallback {
-        
+
         @Override
         public void onMessage(String msg) {
             listener.onMessage(msg);
         }
-        
+
         @Override
         public void onMapLoaded(SimulatorMap map) {
             listener.onMapLoaded(map);
         }
-        
+
         @Override
         public void onGameFinished() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-        
+
         @Override
         public void awaitPlayerTurn(Point point) throws RemoteException {
-            setGameState(GameState.AWAIT_PLAYER_TURN);
             listener.awaitPlayerTurn(point);
         }
-        
+
         @Override
         public void onPlayerTurn(Point point, Color color) throws RemoteException {
             listener.onPlayerTurn(point, color);
         }
-        
+
     }
-    
+
     public MultiplayerLogic(Listener listener) {
         this.listener = listener;
-        setGameState(GameState.UNCONNECTED);
         listener.onMessage("Hello to Simulator");
         listener.onMessage("Please connect to Server");
-        
+
         listener.onMapLoaded(SimulatorMap.loadFromFile(new File("game.csv")));
-        
+
         listener.onPlayerTurn(new Point(100, 100), Color.yellow);
         listener.onPlayerTurn(new Point(200, 100), Color.red);
         listener.awaitPlayerTurn(new Point(192, 192));
     }
-    
-    private void setGameState(GameState state) {
-        this.state = state;
-        listener.onGameStateChange(state);
-    }
-    
+
     public void loadMap(File file) {
-        if (state != GameState.CONNECTED) {
-            throw new IllegalStateException();
-        }
         map = SimulatorMap.loadFromFile(file);
         listener.onMapLoaded(map);
-        setGameState(GameState.MAP_LOADED);
         listener.onMessage("Map loaded");
     }
-    
+
     public void connect(String host) {
-        if (state != GameState.UNCONNECTED) {
+        if (connected) {
             throw new IllegalStateException();
         }
         try {
             Registry registry = LocateRegistry.getRegistry(host, 8888);
             server = (IServer) registry.lookup("simulator");
-            setGameState(GameState.CONNECTED);
+            connected = true;
+            listener.onGameStateChange();
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(MultiplayerLogic.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void sendMessage(String msg) {
         try {
             game.message(msg);
@@ -130,37 +113,42 @@ public class MultiplayerLogic {
             e.printStackTrace();
         }
     }
-    
-    public void createGame(String name) {
-        if (state != GameState.MAP_LOADED) {
+
+    public void createGame(String gameName, String mapName, String playerName, int playerCount) {
+        if (!connected || inGame) {
             throw new IllegalStateException();
         }
-        
+
         try {
-            game = server.joinGame(name, "123", "testPlayer", new ClientCallback());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void joinGame(String name, String code, String player) {
-        if (state != GameState.CONNECTED) {
-            throw new IllegalStateException();
-        }
-        
-        try {
-            game = server.joinGame(name, code, player,
+            game = server.createAndJoinGame(gameName, mapName, playerName, playerCount,
                     (IClientCallback) UnicastRemoteObject.exportObject(new ClientCallback(), 0));
+            inGame = true;
+            listener.onGameStateChange();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
-    
-    public List<String> listGames() {
-        if (state != GameState.CONNECTED) {
+
+    public void joinGame(String gameName, String code, String playerName) {
+        if (!connected || inGame) {
             throw new IllegalStateException();
         }
-        
+
+        try {
+            game = server.joinGame(gameName, code, playerName,
+                    (IClientCallback) UnicastRemoteObject.exportObject(new ClientCallback(), 0));
+            inGame = true;
+            listener.onGameStateChange();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> listGames() {
+        if (!connected) {
+            throw new IllegalStateException();
+        }
+
         try {
             return server.listGames();
         } catch (RemoteException e) {
@@ -168,21 +156,38 @@ public class MultiplayerLogic {
             return Collections.emptyList();
         }
     }
-    
-    public void setPlayerTurn(int position) {
-        if (state != GameState.AWAIT_PLAYER_TURN) {
+
+    public List<String> listMaps() {
+        if (!connected) {
             throw new IllegalStateException();
         }
-        
+
+        try {
+            return server.listMaps();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    public void setPlayerTurn(int position) {
         try {
             game.setPlayerTurn(position);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
     public void quitGame() {
     }
-    
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public boolean isInGame() {
+        return inGame;
+    }
+
 }

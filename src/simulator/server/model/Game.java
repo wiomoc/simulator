@@ -1,6 +1,8 @@
 package simulator.server.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import simulator.SimulatorMap;
 
 /**
@@ -13,12 +15,14 @@ public class Game {
     private SimulatorMap map;
     private String name;
     private String code;
+    private int playerCount;
 
-    public Game(List<Player> players, SimulatorMap map, String name, String code) {
-        this.players = players;
+    public Game(SimulatorMap map, String name, int playerCount) {
+        this.players = new ArrayList<>();
         this.map = map;
         this.name = name;
-        this.code = code;
+        this.code = Integer.toString(new Random().nextInt() + 999999).substring(0, 6);
+        this.playerCount = playerCount;
     }
 
     public List<Player> getPlayers() {
@@ -46,16 +50,30 @@ public class Game {
     }
 
     public void join(Player player) {
-        players.add(player);
-    }
+        if (playerCount == players.size()) {
+            throw new IllegalStateException("Enough Players");
+        }
 
-    public void onMessage(Player player, String message) {
+        players.add(player);
+
+        if (playerCount == players.size()) {
+            //start game
+        } else {
+           broadcastMessage(playerCount - players.size() + " more player required");
+        }
+    }
+    
+    private void broadcastMessage(String message) {
         for (Player other : players) {
-            other.sendMessage(player.getName() + ": " + message);
+            other.sendMessage(message);
         }
     }
 
+    public void onMessage(Player player, String message) {
+        broadcastMessage(player.getName() + ": " + message);
+    }
+
     public void setPlayerTurn(Player player, int position) {
-        
+
     }
 }
