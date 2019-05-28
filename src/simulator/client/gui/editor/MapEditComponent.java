@@ -22,11 +22,11 @@ import simulator.Point;
 public class MapEditComponent extends JPanel {
 
     private SimulatorMap map;
-    private Point currentDragged;
-    private ArrayList<Point> innerPoints = new ArrayList<>();
-    private ArrayList<Point> outterPoints = new ArrayList<>();
-    private ArrayList<Point> startPoints = new ArrayList<>();
-    private ArrayList<Point> selectedPoints = innerPoints;
+    private int currentDragged;
+    private TrackBezier innerPoints = new TrackBezier();
+    private TrackBezier outterPoints = new TrackBezier();
+    private StartLine startPoints = new StartLine();
+    private IChangeablePath selectedPoints = innerPoints;
 
     public MapEditComponent() {
         addMouseListener(new MouseListener() {
@@ -34,28 +34,28 @@ public class MapEditComponent extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 Point point = new Point(e.getX(), e.getY());
-                for (Point p : selectedPoints) {
+                for (Point p : selectedPoints.getPoints()) {
                     if (isPointSelected(p, point)) {
+                        int index = selectedPoints.getPoints().indexOf(p);
                         if (SwingUtilities.isRightMouseButton(e)) {
-                            selectedPoints.remove(p);
+                            selectedPoints.deletePoint(index);
                         } else if (SwingUtilities.isMiddleMouseButton(e)) {
-                            int index = selectedPoints.indexOf(p);
-                            selectedPoints.set(index, new Point(p.getX() + 8, p.getY() + 8));
-                            selectedPoints.add(index, new Point(p.getX() - 8, p.getY() - 8));
+                          selectedPoints.splitPoint(index);
                         } else {
-                            currentDragged = p;
+                            currentDragged = index;
                         }
                         repaint();
                         return;
                     }
                 }
-                selectedPoints.add(point);
+
+                selectedPoints.addPoint(point);
                 repaint();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                currentDragged = null;
+                currentDragged = -1;
             }
 
             @Override
@@ -74,9 +74,10 @@ public class MapEditComponent extends JPanel {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                Point point = new Point(e.getX(), e.getY());
-                if (currentDragged != null) {
-                    currentDragged = point;
+
+                if (currentDragged != -1) {
+                    Point point = new Point(e.getX(), e.getY());
+                  selectedPoints.changeLocation(currentDragged, point);
                     repaint();
                 }
             }
@@ -90,19 +91,6 @@ public class MapEditComponent extends JPanel {
         return Math.sqrt(x * x + y * y) < 10;
     }
 
-    private void drawPoints(Graphics2D gr, ArrayList<Point> points) {
-        GeneralPath path = new GeneralPath();
-        boolean first = true;
-        for (Point point : points) {
-            if (first) {
-                path.moveTo(point.getX(), point.getY());
-                first = false;
-            } else {
-                path.lineTo(point.getX(), point.getY());
-            }
-        }
-        gr.draw(path);
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -113,19 +101,19 @@ public class MapEditComponent extends JPanel {
 
         gr.setColor(Color.GRAY);
         gr.setStroke(new BasicStroke(5));
-        for (Point point : selectedPoints) {
+        for (Point point : selectedPoints.getPoints()) {
             gr.drawOval(point.getX() - 5, point.getY() - 5, 10, 10);
         }
 
         gr.setStroke(new BasicStroke(4));
         gr.setColor(Color.BLACK);
-        drawPoints(gr, innerPoints);
+        gr.draw(innerPoints.getShape());
         gr.setStroke(new BasicStroke(4));
         gr.setColor(Color.BLUE);
-        drawPoints(gr, outterPoints);
+        gr.draw(outterPoints.getShape());
         gr.setStroke(new BasicStroke(4));
         gr.setColor(Color.RED);
-        drawPoints(gr, startPoints);
+        gr.draw(startPoints.getShape());
 
         if (map == null) {
             return;
