@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package simulator.client;
 
 import java.awt.Color;
@@ -13,7 +8,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,21 +23,11 @@ import simulator.interfaces.IServer;
  */
 public class MultiplayerLogic {
     
-    SimulatorMap map;
-    LinkedList<Player> players;
-    GameState state;
-    Listener listener;
-    IServer server;
-    IRemoteGame game;
-    
-    private class Player {
-        
-        public Player(int id) {
-            this.id = id;
-        }
-        
-        int id;
-    }
+    private SimulatorMap map;
+    private GameState state;
+    private Listener listener;
+    private IServer server;
+    private IRemoteGame game;
     
     public enum GameState {
         UNCONNECTED,
