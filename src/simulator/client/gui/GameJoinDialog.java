@@ -1,18 +1,16 @@
 package simulator.client.gui;
 
+import simulator.client.MultiplayerLogic;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.function.Consumer;
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import simulator.client.MultiplayerLogic;
 
 /**
  *
  * @author 82wach1bif
  */
-public class GameJoinDialog extends javax.swing.JDialog {
+public class GameJoinDialog extends JDialog {
 
     private DefaultListModel<String> gameListModel = new DefaultListModel<>();
 

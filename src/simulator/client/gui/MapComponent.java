@@ -15,6 +15,11 @@ import java.util.function.Consumer;
  */
 public class MapComponent extends JPanel {
 
+    private SimulatorMap map;
+    private ArrayList<Turn> turns;
+    private Point currentPointer;
+    private Consumer<Integer> turnCallback;
+
     class Turn {
 
         private Point point;
@@ -33,11 +38,6 @@ public class MapComponent extends JPanel {
             return color;
         }
     }
-
-    private SimulatorMap map;
-    private ArrayList<Turn> turns;
-    private Point currentPointer;
-    private Consumer<Integer> turnCallback;
 
     public MapComponent() {
         turns = new ArrayList<>();

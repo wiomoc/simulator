@@ -5,11 +5,13 @@ import simulator.Point;
 import simulator.SimulatorMap;
 import simulator.client.MultiplayerLogic;
 
+import javax.swing.*;
+
 /**
  *
  * @author 82wach1bif
  */
-public class SimulatorFrame extends javax.swing.JFrame {
+public class SimulatorFrame extends JFrame {
 
     private MultiplayerLogic logic;
 
