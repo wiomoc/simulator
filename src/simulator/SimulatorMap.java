@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -22,19 +23,19 @@ import java.util.stream.Collectors;
 public class SimulatorMap implements Serializable {
 
     private String name;
-    private GeneralPath outer;
-    private GeneralPath inner;
+    private Point[] outer;
+    private Point[] inner;
     private Line2D.Float firstStartLine;
     private Line2D.Float secondStartLine;
     private int width;
     private int heigth;
     private int rasterSize;
 
-    private SimulatorMap(String name,
+    public SimulatorMap(String name,
             int width, int heigth,
             int rastersize,
-            GeneralPath outer,
-            GeneralPath inner,
+            Point[] outer,
+            Point[] inner,
             Line2D.Float firstStartLine,
             Line2D.Float secondStartLine) {
         this.name = name;
@@ -47,11 +48,11 @@ public class SimulatorMap implements Serializable {
         this.secondStartLine = secondStartLine;
     }
 
-    public GeneralPath getOuter() {
+    public Point[] getOuter() {
         return outer;
     }
 
-    public GeneralPath getInner() {
+    public Point[] getInner() {
         return inner;
     }
 
@@ -99,19 +100,19 @@ public class SimulatorMap implements Serializable {
 
     }
 
-    private static GeneralPath createPath(Point[] points) {
+    public static GeneralPath createPath(Point[] points) {
         GeneralPath path = new GeneralPath(0);
+        if (points.length > 0) {
+            path.moveTo(points[0].getX(), points[0].getY());
 
-        path.moveTo(points[0].getX(), points[0].getY());
+            for (int i = 0; i < points.length; i += 2) {
+                path.curveTo(points[i].getX(), points[i].getY(),
+                        points[(i + 1) % points.length].getX(), points[(i + 1) % points.length].getY(),
+                        points[(i + 2) % points.length].getX(), points[(i + 2) % points.length].getY());
+            }
 
-        for (int i = 0; i < points.length; i += 2) {
-            path.curveTo(points[i].getX(), points[i].getY(),
-                    points[(i + 1) % points.length].getX(), points[(i + 1) % points.length].getY(),
-                    points[(i + 2) % points.length].getX(), points[(i + 2) % points.length].getY());
+            path.closePath();
         }
-
-        path.closePath();
-
         return path;
     }
 
@@ -126,11 +127,11 @@ public class SimulatorMap implements Serializable {
 
             line = readLine(reader);
             int countOuter = line.get(0);
-            Point[] outterPoints = new Point[countOuter];
+            Point[] outerPoints = new Point[countOuter];
             line = readLine(reader);
 
             for (int i = 0; i < countOuter; i++) {
-                outterPoints[i] = new Point(line.get(i * 2), line.get(i * 2 + 1));
+                outerPoints[i] = new Point(line.get(i * 2), line.get(i * 2 + 1));
             }
 
             line = readLine(reader);
@@ -138,7 +139,7 @@ public class SimulatorMap implements Serializable {
             Point[] innerPoints = new Point[countInner];
             line = readLine(reader);
 
-            for (int i = 0; i < countOuter; i++) {
+            for (int i = 0; i < countInner; i++) {
                 innerPoints[i] = new Point(line.get(i * 2), line.get(i * 2 + 1));
             }
 
@@ -146,13 +147,36 @@ public class SimulatorMap implements Serializable {
             int rasterSize = line.get(0);
             line = readLine(reader);
             Line2D.Float startLine = new Line2D.Float(line.get(0), line.get(1), line.get(2), line.get(3));
-            
+
             String name = file.getName();
 
-            return new SimulatorMap(name, width, height, rasterSize, createPath(outterPoints), createPath(innerPoints), startLine, null);
+            return new SimulatorMap(name, width, height, rasterSize, outerPoints, innerPoints, startLine, null);
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
 
+    public void saveToFile(File file) {
+        try {
+            PrintStream writer = new PrintStream(file);
+            writer.print(width);
+            writer.print(',');
+            writer.println(heigth);
+            writer.println(outer.length);
+            writer.println(Arrays.stream(outer).map(p -> p.getX() + "," + p.getY()).collect(Collectors.joining(",")));
+            writer.println(inner.length);
+            writer.println(Arrays.stream(inner).map(p -> p.getX() + "," + p.getY()).collect(Collectors.joining(",")));
+            writer.println(rasterSize);
+            writer.print((int) firstStartLine.getX1());
+            writer.print(',');
+            writer.print((int) firstStartLine.getY1());
+            writer.print(',');
+            writer.print((int) firstStartLine.getX2());
+            writer.print(',');
+            writer.println((int) firstStartLine.getY2());
+
+        } catch (IOException ex) {
+            throw new IllegalArgumentException(ex);
+        }
     }
 }

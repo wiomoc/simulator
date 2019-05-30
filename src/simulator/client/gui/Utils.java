@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Utils {
 
-    public static void chooseMapFile(Component parent, Consumer<File> cb) {
+    private static JFileChooser generateChooser(Consumer<File> cb) {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("SimulatorMap (.csv)", "csv"));
         chooser.addActionListener((l) -> {
@@ -21,7 +21,15 @@ public class Utils {
                 cb.accept(file);
             }
         });
-
-        chooser.showOpenDialog(parent);
+        return chooser;
     }
+
+    public static void chooseMapFileOpen(Component parent, Consumer<File> cb) {
+        generateChooser(cb).showOpenDialog(parent);
+    }
+
+    public static void chooseMapFileSave(Component parent, Consumer<File> cb) {
+        generateChooser(cb).showSaveDialog(parent);
+    }
+
 }

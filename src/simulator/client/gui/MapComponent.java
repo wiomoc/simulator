@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 public class MapComponent extends JPanel {
 
     private SimulatorMap map;
+    private Area track;
     private ArrayList<Turn> turns;
     private Point currentPointer;
     private Consumer<Integer> turnCallback;
@@ -46,6 +47,8 @@ public class MapComponent extends JPanel {
 
     public void setMap(SimulatorMap map) {
         this.map = map;
+        track = new Area(SimulatorMap.createPath(map.getOuter()));
+        track.subtract(new Area(SimulatorMap.createPath(map.getInner())));
         this.repaint();
     }
 
@@ -96,11 +99,9 @@ public class MapComponent extends JPanel {
             gr.drawLine(0, y, map.getWidth(), y);
         }
 
-        Area area = new Area(map.getOuter());
-        area.subtract(new Area(map.getInner()));
 
         gr.setColor(Color.BLUE);
-        gr.fill(area);
+        gr.fill(track);
 
         gr.setColor(Color.RED);
         gr.setStroke(new BasicStroke(5));

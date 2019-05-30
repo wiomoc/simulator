@@ -8,12 +8,12 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.Line2D;
 import simulator.SimulatorMap;
 
 import javax.swing.*;
-import java.awt.geom.Area;
-import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
+import java.util.Arrays;
 import simulator.Point;
 
 /**
@@ -24,7 +24,7 @@ public class MapEditComponent extends JPanel {
     private SimulatorMap map;
     private int currentDragged;
     private TrackBezier innerPoints = new TrackBezier();
-    private TrackBezier outterPoints = new TrackBezier();
+    private TrackBezier outerPoints = new TrackBezier();
     private StartLine startPoints = new StartLine();
     private IChangeablePath selectedPoints = innerPoints;
 
@@ -40,7 +40,7 @@ public class MapEditComponent extends JPanel {
                         if (SwingUtilities.isRightMouseButton(e)) {
                             selectedPoints.deletePoint(index);
                         } else if (SwingUtilities.isMiddleMouseButton(e)) {
-                          selectedPoints.splitPoint(index);
+                            selectedPoints.splitPoint(index);
                         } else {
                             currentDragged = index;
                         }
@@ -77,7 +77,7 @@ public class MapEditComponent extends JPanel {
 
                 if (currentDragged != -1) {
                     Point point = new Point(e.getX(), e.getY());
-                  selectedPoints.changeLocation(currentDragged, point);
+                    selectedPoints.changeLocation(currentDragged, point);
                     repaint();
                 }
             }
@@ -91,6 +91,19 @@ public class MapEditComponent extends JPanel {
         return Math.sqrt(x * x + y * y) < 10;
     }
 
+    public void updateMap(SimulatorMap map) {
+        startPoints = new StartLine(map.getFirstStartLine());
+        innerPoints = new TrackBezier(new ArrayList<>(Arrays.asList(map.getInner())));
+        outerPoints = new TrackBezier(new ArrayList<>(Arrays.asList(map.getOuter())));
+        repaint();
+    }
+
+    public SimulatorMap generateMap() {
+        return new SimulatorMap("", getWidth(), getHeight(), 10,
+                innerPoints.getPoints().toArray(Point[]::new),
+                outerPoints.getPoints().toArray(Point[]::new),
+                (Line2D.Float) startPoints.getShape(), null);
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -110,37 +123,10 @@ public class MapEditComponent extends JPanel {
         gr.draw(innerPoints.getShape());
         gr.setStroke(new BasicStroke(4));
         gr.setColor(Color.BLUE);
-        gr.draw(outterPoints.getShape());
+        gr.draw(outerPoints.getShape());
         gr.setStroke(new BasicStroke(4));
         gr.setColor(Color.RED);
         gr.draw(startPoints.getShape());
-
-        if (map == null) {
-            return;
-        }
-
-        gr.scale((float) getWidth() / map.getWidth(), (float) getHeight() / map.getHeigth());
-
-        gr.setColor(Color.GRAY);
-        gr.setStroke(new BasicStroke(1));
-        for (int x = 0; x < map.getWidth(); x += map.getRasterSize()) {
-            gr.drawLine(x, 0, x, map.getHeigth());
-        }
-
-        for (int y = 0; y < map.getHeigth(); y += map.getRasterSize()) {
-            gr.drawLine(0, y, map.getWidth(), y);
-        }
-
-        Area area = new Area(map.getOuter());
-        area.subtract(new Area(map.getInner()));
-
-        gr.setColor(Color.BLUE);
-        gr.fill(area);
-
-        gr.setColor(Color.RED);
-        gr.setStroke(new BasicStroke(5));
-        gr.draw(map.getFirstStartLine());
-
     }
 
     void selectInner() {
@@ -149,7 +135,7 @@ public class MapEditComponent extends JPanel {
     }
 
     void selectOutter() {
-        selectedPoints = outterPoints;
+        selectedPoints = outerPoints;
         repaint();
     }
 

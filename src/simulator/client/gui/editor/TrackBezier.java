@@ -5,6 +5,7 @@ import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
 import simulator.Point;
+import simulator.SimulatorMap;
 
 /**
  *
@@ -12,22 +13,19 @@ import simulator.Point;
  */
 public class TrackBezier implements IChangeablePath {
 
-    private final ArrayList<Point> points = new ArrayList<>();
+    private final ArrayList<Point> points;
+
+    public TrackBezier() {
+        points = new ArrayList<>();
+    }
+
+    public TrackBezier(ArrayList<Point> points) {
+        this.points = points;
+    }
 
     @Override
     public Shape getShape() {
-        GeneralPath path = new GeneralPath(0);
-        if (points.size() > 0) {
-            path.moveTo(points.get(0).getX(), points.get(0).getY());
-
-            for (int i = 0; i < points.size() - 2; i += 2) {
-                path.curveTo(points.get(i).getX(), points.get(i).getY(),
-                        points.get((i + 1) % points.size()).getX(), points.get((i + 1) % points.size()).getY(),
-                        points.get((i + 2) % points.size()).getX(), points.get((i + 2) % points.size()).getY());
-            }
-
-        }
-        return path;
+       return SimulatorMap.createPath(points.toArray(Point[]::new));
     }
 
     private static Point pointInTheMiddle(Point point1, Point point2) {
@@ -43,6 +41,8 @@ public class TrackBezier implements IChangeablePath {
     public void addPoint(Point newPoint) {
         if (points.size() > 0) {
             points.add(pointInTheMiddle(newPoint, points.get(points.size() - 1)));
+        } else {
+            points.add(new Point(newPoint.getX() + 10, newPoint.getY() + 10));
         }
         points.add(newPoint);
     }

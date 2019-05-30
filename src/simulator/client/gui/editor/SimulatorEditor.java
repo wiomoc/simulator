@@ -1,6 +1,9 @@
 package simulator.client.gui.editor;
 
+import java.io.File;
+import simulator.SimulatorMap;
 import simulator.client.gui.GameJoinDialog;
+import simulator.client.gui.Utils;
 
 /**
  *
@@ -33,6 +36,18 @@ public class SimulatorEditor extends javax.swing.JFrame {
             jToggleButtonInner.setSelected(false);
             jToggleButtonOutter.setSelected(false);
             mapEditComponent.selectStart();
+        });
+        
+        jMenuItemOpen.addActionListener((a) -> {
+            Utils.chooseMapFileOpen(this, (file) -> {
+                mapEditComponent.updateMap(SimulatorMap.loadFromFile(file));
+           });
+        });
+        
+        jMenuItemSave.addActionListener((a) -> {
+            Utils.chooseMapFileSave(this, (file) -> {
+                mapEditComponent.generateMap().saveToFile(file);
+           });
         });
     }
     

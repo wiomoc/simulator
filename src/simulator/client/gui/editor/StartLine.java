@@ -13,7 +13,18 @@ import simulator.Point;
  */
 public class StartLine implements IChangeablePath {
 
-    private final ArrayList<Point> points = new ArrayList<>(2);
+    private final ArrayList<Point> points;
+
+    public StartLine() {
+        points = new ArrayList<>(2);
+    }
+
+    public StartLine(Line2D line) {
+        points = new ArrayList<>(2);
+        points.add(new Point((int) line.getX1(), (int) line.getY1()));
+        points.add(new Point((int) line.getX2(), (int) line.getY2()));
+
+    }
 
     @Override
     public List<Point> getPoints() {
@@ -29,7 +40,8 @@ public class StartLine implements IChangeablePath {
 
     /**
      * Not supported
-     * @param position 
+     *
+     * @param position
      */
     @Override
     public void splitPoint(int position) {
