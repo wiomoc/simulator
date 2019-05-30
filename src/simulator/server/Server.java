@@ -32,7 +32,7 @@ public class Server implements IServer, Serializable {
 
         Server server = new Server();
 
-        server.addMap(SimulatorMap.loadFromFile(new File("game.csv")));
+        server.addMap("default", SimulatorMap.loadFromFile(new File("game.csv")));
         UnicastRemoteObject.exportObject(server, 0);
         localRegistry.bind("simulator", server);
     }
@@ -40,8 +40,8 @@ public class Server implements IServer, Serializable {
     private Server() { }
 
     @Override
-    public void addMap(SimulatorMap map) {
-        maps.put(map.getName(), map);
+    public void addMap(String name, SimulatorMap map) {
+        maps.put(name, map);
     }
 
     @Override

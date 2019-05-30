@@ -55,6 +55,7 @@ public class Game {
         }
 
         players.add(player);
+        player.sendMap(map);
 
         if (playerCount == players.size()) {
             //start game

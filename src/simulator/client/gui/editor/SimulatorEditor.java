@@ -1,6 +1,7 @@
 package simulator.client.gui.editor;
 
-import java.io.File;
+import java.util.function.BiConsumer;
+import javax.swing.JOptionPane;
 import simulator.SimulatorMap;
 import simulator.client.gui.GameJoinDialog;
 import simulator.client.gui.Utils;
@@ -14,7 +15,7 @@ public class SimulatorEditor extends javax.swing.JFrame {
     /**
      * Creates new form SimulatorEditor
      */
-    public SimulatorEditor() {
+    public SimulatorEditor(BiConsumer<String, SimulatorMap> uploadMapCallback) {
         initComponents();
         setLocationRelativeTo(null);
         
@@ -49,9 +50,16 @@ public class SimulatorEditor extends javax.swing.JFrame {
                 mapEditComponent.generateMap().saveToFile(file);
            });
         });
+        
+        jMenuItemUpload.addActionListener((a) -> {
+            SimulatorMap map = mapEditComponent.generateMap();
+            String name = JOptionPane.showInputDialog(this, "Mapname");
+            
+            uploadMapCallback.accept(name, map);
+        });
     }
     
-    public static void open() {
+    public static void open(BiConsumer<String, SimulatorMap> uploadMapCallback) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -74,13 +82,10 @@ public class SimulatorEditor extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(GameJoinDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(() -> {
-            SimulatorEditor editor = new SimulatorEditor();
+            SimulatorEditor editor = new SimulatorEditor(uploadMapCallback);
             editor.setVisible(true);
         });
     }

@@ -21,7 +21,6 @@ import simulator.Point;
  */
 public class MapEditComponent extends JPanel {
 
-    private SimulatorMap map;
     private int currentDragged;
     private TrackBezier innerPoints = new TrackBezier();
     private TrackBezier outerPoints = new TrackBezier();
@@ -99,9 +98,9 @@ public class MapEditComponent extends JPanel {
     }
 
     public SimulatorMap generateMap() {
-        return new SimulatorMap("", getWidth(), getHeight(), 10,
-                innerPoints.getPoints().toArray(Point[]::new),
+        return new SimulatorMap(getWidth(), getHeight(), 10,
                 outerPoints.getPoints().toArray(Point[]::new),
+                innerPoints.getPoints().toArray(Point[]::new),
                 (Line2D.Float) startPoints.getShape(), null);
     }
 

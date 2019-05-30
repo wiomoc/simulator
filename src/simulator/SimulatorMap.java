@@ -22,23 +22,20 @@ import java.util.stream.Collectors;
  */
 public class SimulatorMap implements Serializable {
 
-    private String name;
-    private Point[] outer;
-    private Point[] inner;
-    private Line2D.Float firstStartLine;
-    private Line2D.Float secondStartLine;
-    private int width;
-    private int heigth;
-    private int rasterSize;
+    private final Point[] outer;
+    private final Point[] inner;
+    private final Line2D.Float firstStartLine;
+    private final Line2D.Float secondStartLine;
+    private final int width;
+    private final int heigth;
+    private final int rasterSize;
 
-    public SimulatorMap(String name,
-            int width, int heigth,
+    public SimulatorMap(int width, int heigth,
             int rastersize,
             Point[] outer,
             Point[] inner,
             Line2D.Float firstStartLine,
             Line2D.Float secondStartLine) {
-        this.name = name;
         this.width = width;
         this.heigth = heigth;
         this.rasterSize = rastersize;
@@ -70,10 +67,6 @@ public class SimulatorMap implements Serializable {
 
     public int getHeigth() {
         return heigth;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getRasterSize() {
@@ -148,9 +141,7 @@ public class SimulatorMap implements Serializable {
             line = readLine(reader);
             Line2D.Float startLine = new Line2D.Float(line.get(0), line.get(1), line.get(2), line.get(3));
 
-            String name = file.getName();
-
-            return new SimulatorMap(name, width, height, rasterSize, outerPoints, innerPoints, startLine, null);
+            return new SimulatorMap(width, height, rasterSize, outerPoints, innerPoints, startLine, null);
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
@@ -174,7 +165,6 @@ public class SimulatorMap implements Serializable {
             writer.print((int) firstStartLine.getX2());
             writer.print(',');
             writer.println((int) firstStartLine.getY2());
-
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }

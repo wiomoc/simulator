@@ -23,8 +23,8 @@ public class MapComponent extends JPanel {
 
     class Turn {
 
-        private Point point;
-        private Color color;
+        private final Point point;
+        private final Color color;
 
         Turn(Point pointer, Color color) {
             this.point = pointer;
@@ -89,6 +89,9 @@ public class MapComponent extends JPanel {
 
         gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        gr.setColor(Color.BLUE);
+        gr.fill(track);
+
         gr.setColor(Color.GRAY);
         gr.setStroke(new BasicStroke(1));
         for (int x = 0; x < map.getWidth(); x += map.getRasterSize()) {
@@ -98,10 +101,6 @@ public class MapComponent extends JPanel {
         for (int y = 0; y < map.getHeigth(); y += map.getRasterSize()) {
             gr.drawLine(0, y, map.getWidth(), y);
         }
-
-
-        gr.setColor(Color.BLUE);
-        gr.fill(track);
 
         gr.setColor(Color.RED);
         gr.setStroke(new BasicStroke(5));

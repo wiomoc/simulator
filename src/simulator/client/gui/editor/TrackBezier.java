@@ -1,7 +1,6 @@
 package simulator.client.gui.editor;
 
 import java.awt.Shape;
-import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
 import simulator.Point;
@@ -69,5 +68,4 @@ public class TrackBezier implements IChangeablePath {
             }
         }
     }
-
 }

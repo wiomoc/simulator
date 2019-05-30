@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.List;
 import simulator.Point;
+import simulator.SimulatorMap;
 
 import simulator.interfaces.IClientCallback;
 
@@ -12,7 +13,7 @@ import simulator.interfaces.IClientCallback;
  */
 public class Player {
 
-    private IClientCallback clientCallback;
+    private final IClientCallback clientCallback;
     private int id;
     private String name;
     private List<Point> points;
@@ -36,5 +37,11 @@ public class Player {
         return name;
     }
 
-
+    void sendMap(SimulatorMap map) {
+        try {
+            clientCallback.onMapLoaded(map);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 }

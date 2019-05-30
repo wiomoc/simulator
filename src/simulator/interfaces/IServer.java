@@ -16,7 +16,7 @@ public interface IServer extends Remote {
 
     List<String> listGames() throws RemoteException;
 
-    void addMap(SimulatorMap map) throws RemoteException;
+    void addMap(String name, SimulatorMap map) throws RemoteException;
 
     List<String> listMaps() throws RemoteException;
 }
