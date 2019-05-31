@@ -42,13 +42,11 @@ public class MapComponent extends JPanel {
 
     public MapComponent() {
         turns = new ArrayList<>();
-
     }
 
     public void setMap(SimulatorMap map) {
         this.map = map;
-        track = new Area(SimulatorMap.createPath(map.getOuter()));
-        track.subtract(new Area(SimulatorMap.createPath(map.getInner())));
+        track = map.getArea();
         this.repaint();
     }
 
@@ -66,11 +64,12 @@ public class MapComponent extends JPanel {
     @Override
     protected void processKeyEvent(KeyEvent e) {
         super.processKeyEvent(e);
-        if (currentPointer != null) {
+        if (currentPointer != null && e.getID() == KeyEvent.KEY_PRESSED) {
             int digit = Character.digit(e.getKeyChar(), 10);
             if (digit > 0) {
-                turnCallback.accept(digit);
                 currentPointer = null;
+                turnCallback.accept(digit);
+                this.repaint();
             }
         }
     }

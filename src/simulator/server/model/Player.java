@@ -2,6 +2,7 @@ package simulator.server.model;
 
 import java.awt.Color;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import simulator.Point;
 import simulator.SimulatorMap;
@@ -14,18 +15,42 @@ import simulator.interfaces.IClientCallback;
 public class Player {
 
     private final IClientCallback clientCallback;
+
+    private final static Color[] COLORS = {Color.CYAN, Color.MAGENTA, Color.RED, Color.GRAY, Color.YELLOW, Color.GREEN, Color.ORANGE, Color.PINK};
     private int id;
-    private String name;
+    private final String name;
     private List<Point> points;
-    private Color color;
+    private final Color color;
     private boolean alive;
 
     public Player(String name, IClientCallback clientCallback) {
         this.clientCallback = clientCallback;
         this.name = name;
+        this.color = COLORS[Math.abs(name.hashCode()) % COLORS.length];
+        this.points = new ArrayList<>();
     }
 
-    public void sendMessage(String message) {
+    public String getName() {
+        return name;
+    }
+
+    void addTurn(Point point) {
+        points.add(point);
+    }
+
+    Point getLastTurn() {
+        return points.get(points.size() - 1);
+    }
+
+    void sendMap(SimulatorMap map) {
+        try {
+            clientCallback.onMapLoaded(map);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void sendMessage(String message) {
         try {
             clientCallback.onMessage(message);
         } catch (RemoteException e) {
@@ -33,13 +58,17 @@ public class Player {
         }
     }
 
-    String getName() {
-        return name;
+    void sendTurn(Player player, Point point) {
+        try {
+            clientCallback.onPlayerTurn(point, player.color);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
-    void sendMap(SimulatorMap map) {
+    void awaitTurn() {
         try {
-            clientCallback.onMapLoaded(map);
+            clientCallback.awaitPlayerTurn(getLastTurn());
         } catch (RemoteException e) {
             e.printStackTrace();
         }

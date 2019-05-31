@@ -5,6 +5,7 @@
  */
 package simulator;
 
+import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.io.BufferedReader;
@@ -168,5 +169,11 @@ public class SimulatorMap implements Serializable {
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    public Area getArea() {
+        Area area = new Area(createPath(outer));
+        area.subtract(new Area(createPath(inner)));
+        return area;
     }
 }
