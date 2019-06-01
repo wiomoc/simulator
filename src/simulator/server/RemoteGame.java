@@ -29,4 +29,9 @@ public class RemoteGame implements IRemoteGame {
         game.setPlayerTurn(player, position);
     }
 
+    @Override
+    public void exit() {
+        game.exit(player);
+    }
+
 }

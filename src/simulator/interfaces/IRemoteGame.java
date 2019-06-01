@@ -12,4 +12,6 @@ public interface IRemoteGame extends Remote {
     void message(String msg) throws RemoteException;
 
     void setPlayerTurn(int position) throws RemoteException;
+    
+    void exit() throws RemoteException;
 }

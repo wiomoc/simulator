@@ -49,6 +49,13 @@ public class MapComponent extends JPanel {
         track = map.getArea();
         this.repaint();
     }
+    
+    public void reset() {
+        map = null;
+        track = null;
+        turns = new ArrayList<>();
+        this.repaint();
+    }
 
     public void onPlayerTurn(Point pointer, Color color) {
         turns.add(new Turn(pointer, color));

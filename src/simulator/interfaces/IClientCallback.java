@@ -21,4 +21,6 @@ public interface IClientCallback extends Remote {
     void awaitPlayerTurn(Point point) throws RemoteException;
     
     void onPlayerTurn(Point point, Color color) throws RemoteException;
+    
+    void onKicked() throws RemoteException;
 }

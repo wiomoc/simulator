@@ -34,12 +34,20 @@ public class Player {
         return name;
     }
 
-    void addTurn(Point point) {
+    public void addTurn(Point point) {
         points.add(point);
     }
 
-    Point getLastTurn() {
+    public Point getLastTurn() {
         return points.get(points.size() - 1);
+    }
+    
+    void kick() {
+         try {
+            clientCallback.onKicked();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     void sendMap(SimulatorMap map) {

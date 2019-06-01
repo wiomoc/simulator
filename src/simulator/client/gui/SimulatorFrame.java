@@ -48,6 +48,7 @@ public class SimulatorFrame extends JFrame {
         public void onGameStateChange() {
             jMenuItemGameJoin.setEnabled(logic.isConnected() && !logic.isInGame());
             jMenuItemGameStart.setEnabled(logic.isConnected() && !logic.isInGame());
+            jMenuItemGameQuit.setEnabled(logic.isInGame());
         }
 
         @Override
@@ -56,6 +57,11 @@ public class SimulatorFrame extends JFrame {
             mapComponent.awaitPlayerTurn(point, (turn) -> {
                 logic.setPlayerTurn(turn);
             });
+        }
+
+        @Override
+        public void onReset() {
+           mapComponent.reset();
         }
     }
 
@@ -77,8 +83,7 @@ public class SimulatorFrame extends JFrame {
         });
 
         jMenuItemGameQuit.addActionListener((a) -> {
-            logic.quitGame();
-            System.exit(0);
+            logic.exitGame();
         });
 
         jMenuItemGameJoin.addActionListener((a) -> {

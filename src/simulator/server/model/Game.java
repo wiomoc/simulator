@@ -2,7 +2,6 @@ package simulator.server.model;
 
 import java.awt.geom.Area;
 import java.awt.geom.Line2D;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -144,13 +143,13 @@ public class Game {
     }
 
     private void nextPlayerOnTurn() {
-        Player player = players.peekFirst();
-        System.err.println(player.getName());
+        final Player player = players.peekFirst();
 
         turnTimerTask = new TimerTask() {
             @Override
             public void run() {
-                broadcastMessage("Timeout");
+                player.kick();
+                exit(player);
             }
         };
 
@@ -167,6 +166,20 @@ public class Game {
     private void broadcastTurn(Player player, Point point) {
         for (Player p : players) {
             p.sendTurn(player, point);
+        }
+    }
+
+    public void exit(Player player) {
+        if (players.peekFirst() == player) {
+            if (turnTimerTask != null) {
+                turnTimerTask.cancel();
+            }
+            players.pollFirst();
+            if (players.size() > 0) {
+                nextPlayerOnTurn();
+            }
+        } else {
+            players.remove(player);
         }
     }
 }
