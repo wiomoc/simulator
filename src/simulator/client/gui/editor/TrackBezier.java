@@ -25,7 +25,7 @@ public class TrackBezier implements IChangeablePath {
 
     @Override
     public Shape getShape() {
-       return SimulatorMap.createPath(points.toArray(Point[]::new));
+       return SimulatorMap.createPath(points);
     }
 
     @Override

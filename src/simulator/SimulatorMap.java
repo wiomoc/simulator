@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +24,8 @@ import java.util.stream.Collectors;
  */
 public class SimulatorMap implements Serializable {
 
-    private final Point[] outer;
-    private final Point[] inner;
+    private final ArrayList<Point> outer;
+    private final ArrayList<Point> inner;
     private final Line2D.Float firstStartLine;
     private final Line2D.Float secondStartLine;
     private final int width;
@@ -33,8 +34,8 @@ public class SimulatorMap implements Serializable {
 
     public SimulatorMap(int width, int heigth,
             int rastersize,
-            Point[] outer,
-            Point[] inner,
+            ArrayList<Point> outer,
+            ArrayList<Point> inner,
             Line2D.Float firstStartLine,
             Line2D.Float secondStartLine) {
         this.width = width;
@@ -46,11 +47,11 @@ public class SimulatorMap implements Serializable {
         this.secondStartLine = secondStartLine;
     }
 
-    public Point[] getOuter() {
+    public ArrayList<Point> getOuter() {
         return outer;
     }
 
-    public Point[] getInner() {
+    public ArrayList<Point> getInner() {
         return inner;
     }
 
@@ -94,15 +95,15 @@ public class SimulatorMap implements Serializable {
 
     }
 
-    public static GeneralPath createPath(Point[] points) {
+    public static GeneralPath createPath(ArrayList<Point> points) {
         GeneralPath path = new GeneralPath(0);
-        if (points.length > 0) {
-            path.moveTo(points[0].getX(), points[0].getY());
+        if (points.size() > 0) {
+            path.moveTo(points.get(0).getX(), points.get(0).getY());
 
-            for (int i = 0; i < points.length; i += 2) {
-                path.curveTo(points[i].getX(), points[i].getY(),
-                        points[(i + 1) % points.length].getX(), points[(i + 1) % points.length].getY(),
-                        points[(i + 2) % points.length].getX(), points[(i + 2) % points.length].getY());
+            for (int i = 0; i < points.size(); i += 2) {
+                path.curveTo(points.get(i).getX(), points.get(i).getY(),
+                        points.get((i + 1) % points.size()).getX(), points.get((i + 1) % points.size()).getY(),
+                        points.get((i + 2) % points.size()).getX(), points.get((i + 2) % points.size()).getY());
             }
 
             path.closePath();
@@ -121,20 +122,20 @@ public class SimulatorMap implements Serializable {
 
             line = readLine(reader);
             int countOuter = line.get(0);
-            Point[] outerPoints = new Point[countOuter];
+            ArrayList<Point> outerPoints = new ArrayList<>(countOuter);
             line = readLine(reader);
 
             for (int i = 0; i < countOuter; i++) {
-                outerPoints[i] = new Point(line.get(i * 2), line.get(i * 2 + 1));
+                outerPoints.add(new Point(line.get(i * 2), line.get(i * 2 + 1)));
             }
 
             line = readLine(reader);
             int countInner = line.get(0);
-            Point[] innerPoints = new Point[countInner];
+            ArrayList<Point> innerPoints = new ArrayList<>(countInner);
             line = readLine(reader);
 
             for (int i = 0; i < countInner; i++) {
-                innerPoints[i] = new Point(line.get(i * 2), line.get(i * 2 + 1));
+                innerPoints.add(new Point(line.get(i * 2), line.get(i * 2 + 1)));
             }
 
             line = readLine(reader);
@@ -154,10 +155,10 @@ public class SimulatorMap implements Serializable {
             writer.print(width);
             writer.print(',');
             writer.println(heigth);
-            writer.println(outer.length);
-            writer.println(Arrays.stream(outer).map(p -> p.getX() + "," + p.getY()).collect(Collectors.joining(",")));
-            writer.println(inner.length);
-            writer.println(Arrays.stream(inner).map(p -> p.getX() + "," + p.getY()).collect(Collectors.joining(",")));
+            writer.println(outer.size());
+            writer.println(outer.stream().map(p -> p.getX() + "," + p.getY()).collect(Collectors.joining(",")));
+            writer.println(inner.size());
+            writer.println(inner.stream().map(p -> p.getX() + "," + p.getY()).collect(Collectors.joining(",")));
             writer.println(rasterSize);
             writer.print((int) firstStartLine.getX1());
             writer.print(',');

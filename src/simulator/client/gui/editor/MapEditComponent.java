@@ -13,7 +13,6 @@ import simulator.SimulatorMap;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import simulator.Point;
 
 /**
@@ -92,15 +91,15 @@ public class MapEditComponent extends JPanel {
 
     public void updateMap(SimulatorMap map) {
         startPoints = new StartLine(map.getFirstStartLine());
-        innerPoints = new TrackBezier(new ArrayList<>(Arrays.asList(map.getInner())));
-        outerPoints = new TrackBezier(new ArrayList<>(Arrays.asList(map.getOuter())));
+        innerPoints = new TrackBezier(new ArrayList<>(map.getInner()));
+        outerPoints = new TrackBezier(new ArrayList<>(map.getOuter()));
         repaint();
     }
 
     public SimulatorMap generateMap() {
         return new SimulatorMap(getWidth(), getHeight(), 10,
-                outerPoints.getPoints().toArray(Point[]::new),
-                innerPoints.getPoints().toArray(Point[]::new),
+                new ArrayList<>(outerPoints.getPoints()),
+                new ArrayList<>(innerPoints.getPoints()),
                 (Line2D.Float) startPoints.getShape(), null);
     }
 
