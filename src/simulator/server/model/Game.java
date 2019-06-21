@@ -17,11 +17,11 @@ import simulator.SimulatorMap;
  */
 public class Game {
 
-    private LinkedList<Player> players;
-    private SimulatorMap map;
+    private final LinkedList<Player> players;
+    private final SimulatorMap map;
     private Area trackArea;
     private String name;
-    private String code;
+    private final String code;
     private int playerCount;
     private Timer timer;
     private TimerTask turnTimerTask;
@@ -117,6 +117,23 @@ public class Game {
                 throw new IllegalArgumentException();
         }
 
+        if (!trackArea.contains(point.getX(), point.getY())) {
+            //System.err.println("OUT");
+        } else if (map.getFirstStartLine().intersectsLine(lastPosition.getX(), lastPosition.getY(),
+                point.getX(), point.getY())) {
+
+            System.err.println(Math.acos(((point.getX() - lastPosition.getX())
+                    * (map.getFirstStartLine().getX1() - map.getFirstStartLine().getX2())
+                    + (point.getY() - lastPosition.getY())
+                    * (map.getFirstStartLine().getY1() - map.getFirstStartLine().getY2()))
+                    / (Math.sqrt((point.getX() - lastPosition.getX()) * (point.getX() - lastPosition.getX())
+                            + (point.getY() - lastPosition.getY()) * (point.getY() - lastPosition.getY()))
+                    * Math.sqrt((map.getFirstStartLine().getX1() - map.getFirstStartLine().getX2()) * (map.getFirstStartLine().getX1() - map.getFirstStartLine().getX2())
+                            + (map.getFirstStartLine().getY1() - map.getFirstStartLine().getY2()) * (map.getFirstStartLine().getY1() - map.getFirstStartLine().getY2())))));
+
+            System.err.println("CROSS");
+        }
+
         player.addTurn(point);
         broadcastTurn(player, point);
 
@@ -153,7 +170,7 @@ public class Game {
             }
         };
 
-        timer.schedule(turnTimerTask, 10000);
+        timer.schedule(turnTimerTask, 30000);
         player.awaitTurn();
     }
 
