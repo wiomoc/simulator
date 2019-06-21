@@ -25,7 +25,7 @@ public class GameCreateDialog extends JDialog {
 
         jButtonOk.addActionListener((l) -> {
             this.setVisible(false);
-            logic.createGame(jTextFieldGameName.getText(),jList.getSelectedValue(), jTextFieldPlayerName.getText(), (int) jSpinnerPlayerCount.getValue());
+            logic.createGame(jTextFieldGameName.getText(), jList.getSelectedValue(), jTextFieldPlayerName.getText(), (int) jSpinnerPlayerCount.getValue());
         });
 
         jButtonOk.setEnabled(false);

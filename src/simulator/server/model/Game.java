@@ -1,7 +1,9 @@
 package simulator.server.model;
 
 import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -17,11 +19,11 @@ import simulator.SimulatorMap;
  */
 public class Game {
 
-    private final LinkedList<Player> players;
-    private final SimulatorMap map;
+    private LinkedList<Player> players;
+    private SimulatorMap map;
     private Area trackArea;
     private String name;
-    private final String code;
+    private String code;
     private int playerCount;
     private Timer timer;
     private TimerTask turnTimerTask;
@@ -83,7 +85,7 @@ public class Game {
             turnTimerTask.cancel();
         }
 
-        Point lastPosition = player.getLastTurn();
+        Point lastPosition = player.getNextPosition();
         Point point;
         switch (position) {
             case 1:
@@ -117,25 +119,12 @@ public class Game {
                 throw new IllegalArgumentException();
         }
 
-        if (!trackArea.contains(point.getX(), point.getY())) {
-            //System.err.println("OUT");
-        } else if (map.getFirstStartLine().intersectsLine(lastPosition.getX(), lastPosition.getY(),
-                point.getX(), point.getY())) {
-
-            System.err.println(Math.acos(((point.getX() - lastPosition.getX())
-                    * (map.getFirstStartLine().getX1() - map.getFirstStartLine().getX2())
-                    + (point.getY() - lastPosition.getY())
-                    * (map.getFirstStartLine().getY1() - map.getFirstStartLine().getY2()))
-                    / (Math.sqrt((point.getX() - lastPosition.getX()) * (point.getX() - lastPosition.getX())
-                            + (point.getY() - lastPosition.getY()) * (point.getY() - lastPosition.getY()))
-                    * Math.sqrt((map.getFirstStartLine().getX1() - map.getFirstStartLine().getX2()) * (map.getFirstStartLine().getX1() - map.getFirstStartLine().getX2())
-                            + (map.getFirstStartLine().getY1() - map.getFirstStartLine().getY2()) * (map.getFirstStartLine().getY1() - map.getFirstStartLine().getY2())))));
-
-            System.err.println("CROSS");
-        }
-
         player.addTurn(point);
         broadcastTurn(player, point);
+
+        if (endCondition()) {
+            broadcastMessage(player.getName() + " crossed the line");
+        }
 
         nextPlayerOnTurn();
     }
@@ -198,5 +187,82 @@ public class Game {
         } else {
             players.remove(player);
         }
+    }
+
+    private boolean endCondition() {
+        double outerMaxX = 0;
+        double outerMinX = 0;
+        double outerMaxY = 0;
+        double outerMinY = 0;
+        int anzahlSchnittL = 0;
+        int anzahlSchnittR = 0;
+        int anzahlSchnittO = 0;
+        int anzahlSchnittU = 0;
+
+        //festellen der groeßten x und y werten von den Outerpoints
+        for (int i = 0; i < (map.getOuter().size() - 1); i++) {
+            outerMaxX = Math.max(map.getOuter().get(i).getX(), map.getOuter().get(i + 1).getX());
+            outerMinX = Math.min(map.getOuter().get(i).getX(), map.getOuter().get(i + 1).getX());
+            outerMaxY = Math.max(map.getOuter().get(i).getY(), map.getOuter().get(i + 1).getY());
+            outerMinY = Math.min(map.getOuter().get(i).getY(), map.getOuter().get(i + 1).getY());
+        }
+
+        //Erstellen der Kontrolllinien die geschnitten werden
+        Point2D.Double mitte = new Point2D.Double((outerMaxX - outerMinX) / 2, (outerMaxY - outerMinY) / 2);
+        Line2D waagrechte = new Line2D.Double(outerMinX, mitte.y, outerMaxX, mitte.y);
+        Line2D senkrechte = new Line2D.Double(mitte.x, outerMinY, mitte.x, outerMaxY);
+        Line2D ziellinie = map.getFirstStartLine();
+
+        Line2D playerline; //letzte pos und vorletzte pos des players
+
+        GeneralPath outer = map.createPath(map.getOuter());
+
+        //Ueberpruefung wie oft die Linien bei einer Runde geschnitten werden
+        for (int j = 0; j < outerMaxY + 5; j = j + 5) {
+            if (outer.intersects(mitte.x, j, 1, 5)) {
+                if (j < mitte.y) {
+                    anzahlSchnittO++;
+                } else {
+                    anzahlSchnittU++;
+                }
+            }
+        }
+
+        for (int i = 0; i < outerMaxX + 5; i = i + 5) {
+            if (outer.intersects(i, mitte.y, 5, 1)) {
+                if (i < mitte.x) {
+                    anzahlSchnittL++;
+                } else {
+                    anzahlSchnittR++;
+                }
+            }
+        }
+
+        //Ueberpruefung ob der Spieler die Kontrolllinien oft genug geschnitten hat
+        int pos1x = players.peekFirst().getLastTurn().getX();
+        int pos1y = players.peekFirst().getLastTurn().getY();
+        int pos2x = players.peekFirst().getBeforeLastTurn().getX();
+        int pos2y = players.peekFirst().getBeforeLastTurn().getY();
+
+        playerline = new Line2D.Double(pos1x, pos1y, pos2x, pos2y);
+
+        if (playerline.intersectsLine(ziellinie)) { //intersectsline zwei linien kreuzen sich?
+            players.peekFirst().setSpielerSchnittSZL(players.peekFirst().getSpielerSchnittSZL() + 1);
+        } else if (playerline.intersectsLine(waagrechte)) {
+            if (pos1x < mitte.x) {
+                players.peekFirst().setSpielerSchnittL(players.peekFirst().getSpielerSchnittL() + 1);
+            } else {
+                players.peekFirst().setSpielerSchnittR(players.peekFirst().getSpielerSchnittR() + 1);
+            }
+        } else if (playerline.intersectsLine(senkrechte)) {
+            if (pos1y < mitte.y) {
+                players.peekFirst().setSpielerSchnittO(players.peekFirst().getSpielerSchnittO() + 1);
+            } else {
+                players.peekFirst().setSpielerSchnittU(players.peekFirst().getSpielerSchnittU() + 1);
+            }
+        }
+        return players.peekFirst().getSpielerSchnittSZL() == 2 && players.peekFirst().getSpielerSchnittL() == anzahlSchnittL
+                && players.peekFirst().getSpielerSchnittR() == anzahlSchnittR && players.peekFirst().getSpielerSchnittO() == anzahlSchnittO
+                && players.peekFirst().getSpielerSchnittU() == anzahlSchnittU;
     }
 }
